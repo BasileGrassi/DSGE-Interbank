@@ -1,0 +1,105 @@
+name: DSGE Interbank Grassi 2012
+#with inelastic labor and log utility
+#Warning the definition of mm=M/P(-1) so the real money balance is m = mm/(1+PI)
+
+#k is capital used by an individual firm, capital actually used for production is Phi*k
+#mL is the real money balance disponible at the begining of the period
+
+declarations:
+
+    states: [k, mm, mL, z, u]
+
+    controls: [lamb, R, PI, RL, nu_def, rk]
+
+    auxiliary:  [Phi, y, rksurw, w, mu, pro, x, Enu_def, d, m, c, uc, I]
+
+    shocks: [e_z,e_u]
+
+    parameters: [beta, alpha, delta, x_ss, theta, gamma, varphi, rho, sigma_z, sigma_u, me, sigma]
+
+equations:
+
+    transition: 
+        - k = (1-delta)*Phi(-1)*k(-1)+y(-1)-c(-1) 
+        - mm = (1+x_ss+gamma*u(-1)+varphi*z(-1)+e_u)/(1+PI(-1))*mm(-1)
+        - mL = mm(-1)/(1+PI(-1))
+        - z = rho*z(-1)+e_z
+        - u = gamma*u(-1)+varphi*z(-1)+e_u
+
+
+    auxiliary:
+#first part
+        - Phi = 1-exp(-(nu_def-me)/sigma)
+        - y = exp(z)*Phi^(theta/(theta-1)+alpha-1)*k^alpha
+        - rksurw=(1-alpha)/alpha*1/k
+        - w=alpha/(1-alpha)*rk*k
+        - mu=1/exp(z)*alpha^(-alpha)*(1-alpha)^(1-alpha)*(rksurw)^(alpha)*w
+        - pro= 1/(theta-1)*(theta/(theta-1))^(-theta)*(mu)*y
+#second part
+        - x = u+x_ss
+        - Enu_def = me+sigma-(nu_def+sigma)*exp(-(nu_def-me)/sigma)
+        - d=Enu_def*w/exp(z)*Phi+ (1-Phi)*k-x
+#third part
+        - m = mm/(1+PI)
+        - c = mL/(1+PI)-d
+        - uc = 1/c
+        - I = y - c
+
+
+    arbitrage:
+        - lamb = beta*(1+rk(1)-delta)*Phi(1)*lamb(1)                                | -inf <= lamb <= inf
+        - lamb = beta*lamb(1)*R(1)/(1+PI(1))                                        | -inf <= R <= inf
+        - uc = beta*R*uc(1)/(1+PI(1))                                               | -inf <= PI <= inf
+        - R = RL                                                                    | -inf <= RL <= inf
+        - nu_def=(pro-RL*k)/(w/exp(z)*RL)                                           | -inf <= nu_def <= inf
+        - rk=mu*alpha*exp(z)*k^(alpha-1)                                            | -inf <= rk <= inf
+
+
+calibration:
+
+    parameters:
+        beta: 0.989
+        alpha: 0.36
+        delta: 0.019
+        x_ss: 0.0125
+        theta: 6
+        gamma: 0.5
+        varphi: 0
+        rho: 0.95
+        sigma_z: 0.007
+        sigma_u: 0.0089
+        me: 1
+        sigma: -(nu_def-me)/log(1-Phi)
+
+    steady_state:
+        z: 0
+        u: 0
+        PI: x_ss
+        x: x_ss
+        R: (1+PI)/beta
+        RL: R
+        Phi: 0.8
+        k: 15
+        rk: delta+1/(beta*Phi)-1
+        rksurw: (1-alpha)/alpha*1/k
+        y: Phi^(theta/(theta-1)+alpha-1)*k^alpha
+        w: alpha/(1-alpha)*k*rk
+        mu: 1/exp(z)*alpha^(-alpha)*(1-alpha)^(1-alpha)*(rksurw)^(alpha)*w
+        pro: 1/(theta-1)*(theta/(theta-1))^(-theta)*(mu)*y
+        nu_def: (pro-RL*k)/(w/exp(z)*RL)
+        I: k*(1-(1-delta)*Phi)
+        c: y-I
+        d: Enu_def*w/exp(z)*Phi+ (1-Phi)*k-x
+        mL: (1+PI)*c+d
+        m: mL
+        mm: (1+PI)*m
+        uc: 1/c
+        lamb: uc/R
+        Enu_def: me+sigma-(nu_def+sigma)*exp(-(nu_def-me)/sigma)
+#        Phi: 1-exp(-(nu_def-me)/sigma)
+
+    covariances: |
+        [[ sigma_z**2, 0],
+         [0, sigma_u**2]],
+        
+        

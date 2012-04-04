@@ -1,0 +1,25 @@
+# How to compile YAML files for matlab using dolo :
+
+* Open a terminal
+
+* Change the directory for the directory where the .yaml file is
+
+* Type: `dolo-matlab.py –solve filename.yaml filename.m`
+
+* Enjoy
+
+
+
+# Install Dolo on Windows
+
+* Install a python environment: [Python(x,y)](http://code.google.com/p/pythonxy/) or [EPD](http://enthought.com/products/epd.php)
+
+* Install [Git](http://git-scm.com/). This is needed until dolo is stabilized and is released as binaries. It makes tracking new versions easier.
+
+* Open git bash and move to the directory where you want dolo to stay. Then grab last version:
+`git clone https://albop@github.com/albop/dynare-python.git`
+
+* Go where the installation script is located: `cd dynare-python/dolo/`
+
+* Install dolo: `python setup.py install`
+
