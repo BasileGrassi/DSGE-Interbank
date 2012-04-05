@@ -1,7 +1,5 @@
 
 
-paramirf.namepercent={'R', 'PI'};
-
 
 %%%Scenario configuration
 
@@ -23,17 +21,20 @@ load baseline_sol;
 exo.n=2;
 N=70;
 exo.T=N;
-paramirf.namepercent={'R', 'PI', 'theta','u','z','I'}; %give the name of variable which you want differenc from steady state
+paramirf.namepercent={'R','RL', 'PI', 'x','u','z','rk'}; %give the name of variable which you want differenc from steady state
 
 %% Baseline
 %Define exogeneous path
 e_z=zeros(N,1);
 e_u=[100*0.0089; zeros(N-1,1)];
 
+% e_z=[100*0.007; zeros(N-1,1)];
+% e_u=zeros(N,1);
+
 exo.e=[e_z,e_u];
 
 %The shape of irf's benchmarks
-T=16
+T=40;
 paramirf.range=[1 T];
 paramirf.style='-b';
 paramirf.width=2;
@@ -53,7 +54,7 @@ paramirf.width=2;
 ns=grid.ns;
 x_ss = model.x_ss;
 s_ss = model.s_ss;
-X_s = model.X{2};
+X_s = initial_guess(model,model.s_ss,model.x_ss);
 x=x_ss*ones(1,ns)+X_s*(grid.grid'-s_ss*ones(1,ns));
 x=x';
 
@@ -66,7 +67,7 @@ rule_dr1.cdef=rule.cdef;
 
 
 %Compute and Plot IRF
-RES_dr1=irf_ordre1(exo, paramirf, grid, rule_dr1, model);
+RES_dr1=irf(exo, paramirf, grid, rule_dr1, model);
 
 %% Inputs 'struture description
 

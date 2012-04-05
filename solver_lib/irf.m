@@ -127,7 +127,7 @@ end;
 ifig=1;
 for i=1:nsubfig
 
-    if rem(i,10)==0; ifig=ifig+1; end;
+    if rem(i-1,9)==0 && i>1; ifig=ifig+1; end;
    
     figure(ifig);
     hold on;
@@ -156,7 +156,7 @@ for i=1:nsubfig
         xlabel('years');
         xlim(range);
        end;         
-     else if n_s<i && i<=n_s+n_x;
+    elseif n_s<i && i<=n_s+n_x;
             j=i-n_s;
             if sum(strcmp(model.controls(j),paramirf.namepercent))>0;
                 if rem(i,9)==0; r=9; else r=rem(i,9);end;
