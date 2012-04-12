@@ -37,7 +37,7 @@ equations:
         - rk=mu*alpha*exp(z)*k^(alpha-1)
 #second part
         - x = u+x_ss
-        - Enu_def = me+sigma-(nu_def+sigma)*exp(-(nu_def-me)/sigma)
+        - Enu_def = (me+sigma-(nu_def+sigma)*exp(-(nu_def-me)/sigma))/Phi
         - d=(Enu_def*w/exp(z)*Phi-(1-Phi)*(k+x)/RL)/(Phi-(1-Phi)*(R-1)/RL)
         - lhat= (k+x-(R-1)*d)/RL
         - nu_rat=(d+x+lhat)/(w/exp(z))
@@ -80,12 +80,12 @@ calibration:
         PI: x_ss
         x: x_ss
         R: (1+PI)/beta
-        RL: 1.0240
-        nu_def: -10.2028
-        k: 22.0747
-        d: -10.8853
+        RL: 1.0241
+        nu_def:  -8.8332
+        k: 17.3768
+        d: -17.7550
 #Solvable for a given nu_def and a given k
-        lhat: (k+x+(R-1)*d)/RL
+        lhat: (k+x-(R-1)*d)/RL
         nu_rat: (d+x+lhat)/(w/exp(z))
         nu_strat: (pro+(RL-R)*d+RL*x-vartheta*lhat)/(RL*(w/exp(z)))
         Phi: 1-exp(-(nu_def-me)/sigma)

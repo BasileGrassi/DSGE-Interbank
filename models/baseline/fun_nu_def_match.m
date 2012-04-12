@@ -36,6 +36,7 @@ y=Phi^(theta/(theta-1)+alpha-1)*k^alpha;
 pro=1/(theta-1)*(theta/(theta-1))^(-theta)*(mu)^(1-theta)*y;
 
 %from (11)
+%RES(1) =nu_def-exp(0)*(pro)/(w*RL);% w*RL*nu_def - pro+RL*k;
 RES(1) = w*RL*nu_def - pro+RL*k;
 RES(2) = rk-mu*alpha*k^(alpha-1);
 RES(3) = match-Phi;

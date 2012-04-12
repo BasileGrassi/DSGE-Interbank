@@ -35,7 +35,8 @@ y=exp(z)*Phi^(theta/(theta-1)+alpha-1)*k^alpha;
 pro=1/(theta-1)*(theta/(theta-1))^(-theta)*(mu)^(1-theta)*y;
 
 %from (11)
-RES(1) = nu_def-exp(z)*(pro-RL*k)/(w*RL);
+%RES(1) = nu_def-exp(z)*(pro)/(w*RL);
+RES(1)=nu_def-exp(z)*(pro-RL*k)/(w*RL);
 RES(2) = rk-mu*alpha*k^(alpha-1);
 
 

@@ -30,14 +30,14 @@ equations:
     auxiliary:
 #first part
         - Phi = 1-exp(-(nu_def-me)/sigma)
-        - mu=Phi^(1/(theta-1))*(theta-1)/theta
-        - w=mu*(1-alpha)*exp(z)*k^alpha
+        - mu = Phi^(1/(theta-1))*(theta-1)/theta
+        - w = mu*(1-alpha)*exp(z)*k^alpha
         - y = exp(z)*Phi^(theta/(theta-1)+alpha-1)*k^alpha
         - pro= 1/(theta-1)*(theta/(theta-1))^(-theta)*(mu)^(1-theta)*y
         - rk=mu*alpha*exp(z)*k^(alpha-1)
 #second part
         - x = u+x_ss
-        - Enu_def = me+sigma-(nu_def+sigma)*exp(-(nu_def-me)/sigma)
+        - Enu_def = (me+sigma-(nu_def+sigma)*exp(-(nu_def-me)/sigma))/Phi
         - d=Enu_def*w/exp(z)*Phi+ (1-Phi)*k-x
 #third part
         - m = mm/(1+PI)
@@ -52,6 +52,7 @@ equations:
         - uc = beta*R*uc(1)/(1+PI(1))                                               | -inf <= PI <= inf
         - R = RL                                                                    | -inf <= RL <= inf
         - nu_def=exp(z)*(pro-RL*k)/(w*RL)                                           | -inf <= nu_def <= inf
+#        - nu_def=exp(z)*(pro)/(w*RL)                                           | -inf <= nu_def <= inf
 
 
 calibration:
@@ -67,8 +68,8 @@ calibration:
         rho: 0.95
         sigma_z: 0.007
         sigma_u: 0.0089
-        me:  -5.6879
-        sigma: -1
+        me: -16.4780
+        sigma: 2
 
     steady_state:
         z: 0

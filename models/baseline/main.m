@@ -7,6 +7,8 @@
 % Do not forget to add the compecon libraries
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clear all
+
 %% Addpath libraries
 
 addpath('../../solver_lib')
@@ -21,9 +23,9 @@ none=[];
 model = feval( [model_name '_model']);
 
 
-[x_ss,s_ss]=steady_state(model);
-model.x_ss=x_ss';
-model.s_ss=s_ss';
+% [x_ss,s_ss]=steady_state(model);
+% model.x_ss=x_ss';
+% model.s_ss=s_ss';
 
 % Define shocks
 N_shocks = [5 5];
@@ -63,12 +65,12 @@ maxiteration=5000;
 % Initialization using first order d.r.
 x_ss = model.x_ss;
 s_ss = model.s_ss;
-X_s = model.X{2}
-xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
-x=xinit';
-% X_s=initial_guess(model, model.s_ss, model.x_ss);
-% X_s=real(X_s);
+% X_s = model.X{2}
 % xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
+% x=xinit';
+X_s=initial_guess(model, model.s_ss, model.x_ss);
+X_s=real(X_s);
+xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
 x=xinit';
 
 
@@ -89,38 +91,38 @@ disp('_________________________________________________________');
 tic;
 t0 = tic;
 [coeff,B]=funfitxy(cdef, grid, x);
-% while converge==0 && iteration < maxiteration
-%     
-%     [coeff,B]=funfitxy(cdef, grid, x);
-%     
-%     fobj = @(xt) step_residuals_nodiff(grid, xt, e, w, model.params, model, coeff, cdef, hom);
-%     [x_up, nit] = newton_solver_diff(fobj, x, 50);
-%     
-%     err=sum(sum(abs(x-x_up)));
-%     if (err < tol);
-%         converge=1;
-%     end;
-%     
-%     t1 = tic;
-%     elapsed = double(t1 - t0)/1e6;
-%     t0 = t1;
-%     
-%     gain=err/err0;
-%     fprintf('%d\t%e\t%.2f\t%.2f\t%d\t%.2f\n', iteration, err, gain, hom, nit, elapsed)
-% 
-%     
-%     if (err < 1) && (hom_i < hom_n);
-%         hom_i = hom_i + 1;
-%         hom = homvec(hom_i);
-%     end;
-%     
-%     err0 = err;  
-%     
-%     x=x_up;
-%     iteration = iteration+1;
-%     
-%     
-% end;
+while converge==0 && iteration < maxiteration
+    
+    [coeff,B]=funfitxy(cdef, grid, x);
+    
+    fobj = @(xt) step_residuals_nodiff(grid, xt, e, w, model.params, model, coeff, cdef, hom);
+    [x_up, nit] = newton_solver_diff(fobj, x, 50);
+    
+    err=sum(sum(abs(x-x_up)));
+    if (err < tol);
+        converge=1;
+    end;
+    
+    t1 = tic;
+    elapsed = double(t1 - t0)/1e6;
+    t0 = t1;
+    
+    gain=err/err0;
+    fprintf('%d\t%e\t%.2f\t%.2f\t%d\t%.2f\n', iteration, err, gain, hom, nit, elapsed)
+
+    
+    if (err < 1) && (hom_i < hom_n);
+        hom_i = hom_i + 1;
+        hom = homvec(hom_i);
+    end;
+    
+    err0 = err;  
+    
+    x=x_up;
+    iteration = iteration+1;
+    
+    
+end;
 disp('___________ ________________________________');
 toc;
 
