@@ -26,16 +26,17 @@ paramirf.namepercent={'R','RL', 'PI', 'x','u','z','rk'}; %give the name of varia
 %% Baseline
 %Define exogeneous path
 e_z=zeros(N,1);
-%e_u=[100*0.0089; zeros(N-1,1)];
 e_u=zeros(N,1);
+ecrisis=zeros(N,1);
+ecrisis(1)=0;
 
 % e_z=[100*0.007; zeros(N-1,1)];
 % e_u=zeros(N,1);
 
-exo.e=[e_z,e_u];
+exo.e=[e_z,e_u,ecrisis];
 
 %The shape of irf's benchmarks
-T=40;
+T=70;
 paramirf.range=[1 T];
 paramirf.style='-b';
 paramirf.width=2;
@@ -46,29 +47,29 @@ RES_baseline=irf(exo, paramirf, grid, rule, model);
 
 %% Linear Decision Rule
 
-
-%The shape of irf's benchmarks
-paramirf.range=[1 T];
-paramirf.style='--r';
-paramirf.width=2;
-
-ns=grid.ns;
-x_ss = model.x_ss;
-s_ss = model.s_ss;
-X_s = initial_guess(model,model.s_ss,model.x_ss);
-x=x_ss*ones(1,ns)+X_s*(grid.grid'-s_ss*ones(1,ns));
-x=x';
-
-[coeff_lin,B]=funfitxy(rule.cdef, grid.grid, x);
-
-
-rule_dr1.x=x;
-rule_dr1.coeff=coeff_lin;
-rule_dr1.cdef=rule.cdef;
-
-
-%Compute and Plot IRF
-RES_dr1=irf(exo, paramirf, grid, rule_dr1, model);
+% 
+% %The shape of irf's benchmarks
+% paramirf.range=[1 T];
+% paramirf.style='--r';
+% paramirf.width=2;
+% 
+% ns=grid.ns;
+% x_ss = model.x_ss;
+% s_ss = model.s_ss;
+% X_s = initial_guess(model,model.s_ss,model.x_ss);
+% x=x_ss*ones(1,ns)+X_s*(grid.grid'-s_ss*ones(1,ns));
+% x=x';
+% 
+% [coeff_lin,B]=funfitxy(rule.cdef, grid.grid, x);
+% 
+% 
+% rule_dr1.x=x;
+% rule_dr1.coeff=coeff_lin;
+% rule_dr1.cdef=rule.cdef;
+% 
+% 
+% %Compute and Plot IRF
+% RES_dr1=irf(exo, paramirf, grid, rule_dr1, model);
 
 %% Inputs 'struture description
 
