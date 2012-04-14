@@ -1,10 +1,11 @@
-function [ RES] = fun_nu_def_match(var,sigma,match, params)
+function [ RES] = fun_nu_def_match(var,dist,distparams,match, params)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
 nu_def=var(1);
 k=var(2);
-me=var(3);
+
+
 
 beta=params(1);
 alpha=params(2);
@@ -18,7 +19,7 @@ RL=R;
 
 
 
-Phi=1-exp(-(nu_def-me)/sigma);
+Phi=dist.cdf(nu_def,distparams);
 
 rk=1/(beta*Phi)+delta-1;
 

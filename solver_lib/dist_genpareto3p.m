@@ -28,17 +28,17 @@ function out1 = Etr(x,params)
     me=params(1);
     sigma=params(2);
     xi=params(3);
-    F=1-(1+xi*(x-me)/sigma).^(-1/xi);
+    Phi=1-(1+xi*(x-me)/sigma).^(-1/xi);
     l=(xi==1)*sigma+(xi<1)*0+(xi>1)*(1/0);
-    out1 = sigma-l/F+x(1+xi*(x-me)/sigma).^(-1/xi)/F;
+    out1 = sigma+x.*(1+xi.*(x-me)/sigma).^(-1/xi)./Phi; %sigma-l./Phi+x.*(1+xi.*(x-me)/sigma).^(-1/xi)./Phi;
 end
 
 function [out1] = dist_info() % informations about the model
 
     di = struct;
     di.parameters = { 'me','sigma', 'xi'};
-    di.params = [ -12.8813 1 0.9];
-    di.support=[-12.8813 10];
+    di.params = [ -30 0.2187 0.9];
+    di.support=[-30 10];
     out1 = di;
 
 end

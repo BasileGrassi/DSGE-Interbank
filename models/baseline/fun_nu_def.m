@@ -1,4 +1,4 @@
-function [ RES] = fun_nu_def(var,me,sigma, params)
+function [ RES] = fun_nu_def(var,dist,distparams, params)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -17,7 +17,7 @@ RL=R;
 
 z=0;
 
-Phi=1-exp(-(nu_def-me)/sigma);
+Phi=dist.cdf(nu_def,distparams);
 
 rk=1/(beta*Phi)+delta-1;
 

@@ -19,15 +19,16 @@ end
 
 
 function out1 = Etr(x,params)
-    out1 = params(1)+params(2)-(x+params(2))*exp(-(nu_def-params(1))/params(2));
+    Phi=1-exp(-(x-params(1))/params(2));
+    out1 = (params(1)+params(2)-(x+params(2)).*exp(-(x-params(1))/params(2)))/Phi;
 end
 
 function [out1] = dist_info() % informations about the model
 
     di = struct;
     di.parameters = { 'me','sigma'};
-    di.params = [ -12.8813 1 ];
-    di.support=[-12.8813 10];
+    di.params = [ -30 0.2187 ];
+    di.support=[-30 10];
     out1 = di;
 
 end

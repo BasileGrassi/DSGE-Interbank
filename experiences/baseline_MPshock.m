@@ -40,7 +40,7 @@ paramirf.style='-b';
 paramirf.width=2;
 
 %Compute and Plot IRF
-%RES_baseline=irf(exo, paramirf, grid, rule, model);
+RES_baseline=irf(exo, paramirf, grid, rule, model);
 
 
 %% Linear Decision Rule

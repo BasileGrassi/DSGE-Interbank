@@ -15,7 +15,7 @@ declarations:
 
     shocks: [e_z,e_u]
 
-    parameters: [beta, alpha, delta, x_ss, theta, gamma, varphi, rho, sigma_z, sigma_u, me, sigma]
+    parameters: [beta, alpha, delta, x_ss, theta, gamma, varphi, rho, sigma_z, sigma_u, spreadq, me, xi, sigma]
 
 equations:
 
@@ -29,7 +29,7 @@ equations:
 
     auxiliary:
 #first part
-        - Phi = 1-exp(-(nu_def-me)/sigma)
+        - Phi = 1-(1+xi*(nu_def-me)/sigma)^(-1/xi)
         - mu = Phi^(1/(theta-1))*(theta-1)/theta
         - w = mu*(1-alpha)*exp(z)*k^alpha
         - y = exp(z)*Phi^(theta/(theta-1)+alpha-1)*k^alpha
@@ -37,7 +37,7 @@ equations:
         - rk=mu*alpha*exp(z)*k^(alpha-1)
 #second part
         - x = u+x_ss
-        - Enu_def = (me+sigma-(nu_def+sigma)*exp(-(nu_def-me)/sigma))/Phi
+        - Enu_def = sigma+nu_def*(1+xi*(nu_def-me)/sigma)^(-1/xi)/Phi
         - d=Enu_def*w/exp(z)*Phi+ (1-Phi)*k-x
 #third part
         - m = mm/(1+PI)
@@ -48,7 +48,7 @@ equations:
 
     arbitrage:
         - lamb = beta*(1+rk(1)-delta)*Phi(1)*lamb(1)                                | -inf <= lamb <= inf
-        - lamb = beta*lamb(1)*R(1)/(1+PI(1))                                        | -inf <= R <= inf
+        - lamb = beta*uc(1)/(1+PI(1))                                        | -inf <= R <= inf
         - uc = beta*R*uc(1)/(1+PI(1))                                               | -inf <= PI <= inf
         - R = RL                                                                    | -inf <= RL <= inf
         - nu_def=exp(z)*(pro-RL*k)/(w*RL)                                           | -inf <= nu_def <= inf
@@ -68,8 +68,10 @@ calibration:
         rho: 0.95
         sigma_z: 0.007
         sigma_u: 0.0089
-        me: -16.4780
-        sigma: 2
+        spreadq: 0.0095
+        me: -30
+        xi: 0.9
+        sigma: xi*(nu_def-me)/((1-Phi)^(-xi)-1)
 
     steady_state:
         z: 0
@@ -78,18 +80,18 @@ calibration:
         x: x_ss
         R: (1+PI)/beta
         RL: R
-        nu_def: -9.2846
-        k: 12.7096
-#Solvable for a given nu_def and a given k
-        Phi: 1-exp(-(nu_def-me)/sigma)
-        rk: mu*alpha*exp(z)*k^(alpha-1) #delta+1/(beta*Phi)-1
+        Phi: 1/(beta*spreadq+1)
+        rk: 1/(beta*Phi)-1+delta
         mu: Phi^(1/(theta-1))*(theta-1)/theta
+        k: (rk/(mu*alpha))^(1/(alpha-1))
         y: Phi^(theta/(theta-1)+alpha-1)*k^alpha
         w: mu*(1-alpha)*exp(z)*k^alpha
         pro: 1/(theta-1)*(theta/(theta-1))^(-theta)*(mu)^(1-theta)*y
+        nu_def: exp(z)*(pro-RL*k)/(w*RL)
+#        nu_def: exp(z)*(pro)/(w*RL)
         I: k*(1-(1-delta)*Phi)
         c: y-I
-        Enu_def: (me+sigma-(nu_def+sigma)*exp(-(nu_def-me)/sigma))/Phi
+        Enu_def: sigma+nu_def*(1+xi*(nu_def-me)/sigma)^(-1/xi)/Phi
         d: Enu_def*w/exp(z)*Phi+ (1-Phi)*k - x
         mL: (1+PI)*(c+d)
         m: mL

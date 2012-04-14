@@ -4,7 +4,7 @@ function [x, it] = newton_solver_diff(fun, x0, maxit, diff)
     n_x = size(x0,2);
         
        
-    tol = 1e-8;
+    tol = 1e-10;
     eps = 1e-5;
 
     
@@ -17,6 +17,7 @@ function [x, it] = newton_solver_diff(fun, x0, maxit, diff)
     it = 0;
     
     while err > tol && it < maxit
+        
         
         res = fun(x0);
         

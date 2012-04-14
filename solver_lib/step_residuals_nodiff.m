@@ -51,6 +51,8 @@ function  F = step_residuals_nodiff( s, x, e0, w, params, model, coeff, cdef, ho
     
     % future controls
     XX = funeval(coeff, cdef, SS);
+    
+    XX(1,:)=XX(1,:)*hom+model.x_ss(1);
         
     % residuals of arbitrage conditions (non integrated)
     [FF] = f(ss, xx, SS, XX, params);
@@ -64,4 +66,13 @@ function  F = step_residuals_nodiff( s, x, e0, w, params, model, coeff, cdef, ho
         F(n,:) = W(n,:) * FF(:,:,n);
     end
     
+%     XX = reshape(XX, n_e, nobs, n_r);
+%     XX = permute( XX, [1, 3, 2]);  % order -> ( n_e, n_r, nobs)
+% 
+%     % integrate w.r.t future shocks
+%     X = zeros( nobs, n_r );
+%     for n = 1:nobs
+%         X(n,:) = W(n,:) * XX(:,:,n);
+%     end
+%     mean(X)
 end

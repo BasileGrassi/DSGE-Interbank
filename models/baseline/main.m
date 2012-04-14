@@ -43,10 +43,10 @@ m = [0 0];
 %% Define the grid
 ss = model.s_ss;
 
-smin = [  11, -5.8,-5.8, -0.03, -0.03 ];
-smax = [ 14, 6.3, 6.3, 0.03, 0.03 ];
+smin = [  20, 2, 2, -0.03, -0.03 ];
+smax = [ 27, 3.6, 3.6, 0.03, 0.03 ];
          
-orders = [5, 5, 5, 2, 2];
+orders = [4, 4, 4, 2, 2];
 
 
 %% Define interpolator
@@ -55,12 +55,12 @@ cdef=fundefn('lin', orders, smin, smax);
 nodes = funnode(cdef);
 grid = gridmake(nodes);
 
-ns = size(grid,1);
+ns = size(grid,1)
 
 
 %% Convergence criteria
-tol=1e-10;
-maxiteration=5000;
+tol=1e-5;
+maxiteration=500;
 
 % Initialization using first order d.r.
 x_ss = model.x_ss;
@@ -77,8 +77,8 @@ x=xinit';
 iteration=1;
 converge=0;
 
-hom_n = 4;
-homvec = linspace(0,1,hom_n);
+hom_n = 2;
+homvec = linspace(0.,1,hom_n);
 hom_i = 1;
 hom = 0;
 err0 = 1e6;
@@ -90,8 +90,9 @@ disp('_________________________________________________________');
 
 tic;
 t0 = tic;
-[coeff,B]=funfitxy(cdef, grid, x);
+%[coeff,B]=funfitxy(cdef, grid, x);
 while converge==0 && iteration < maxiteration
+    
     
     [coeff,B]=funfitxy(cdef, grid, x);
     
@@ -108,16 +109,18 @@ while converge==0 && iteration < maxiteration
     t0 = t1;
     
     gain=err/err0;
+    gain=(gain<1)*(gain>.99)*0.99 + (1-(gain<1)*(gain>.99))*gain;
     fprintf('%d\t%e\t%.2f\t%.2f\t%d\t%.2f\n', iteration, err, gain, hom, nit, elapsed)
+    %disp(sum(abs(x-x_up)))
 
     
-    if (err < 1) && (hom_i < hom_n);
+    if (err < 10^(-1)) && (hom_i < hom_n);
         hom_i = hom_i + 1;
         hom = homvec(hom_i);
     end;
     
     err0 = err;  
-    
+
     x=x_up;
     iteration = iteration+1;
     
