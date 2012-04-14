@@ -7,7 +7,7 @@
 % Do not forget to add the compecon libraries
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-clear all
+%clear all
 
 %% Addpath libraries
 
@@ -43,10 +43,10 @@ m = [0 0];
 %% Define the grid
 ss = model.s_ss;
 
-smin = [  20, 2, 2, -0.03, -0.03 ];
-smax = [ 27, 3.6, 3.6, 0.03, 0.03 ];
+smin = [  20, 2, 2, -0.03, -0.03, 0 ];
+smax = [ 27, 3.6, 3.6, 0.03, 0.03, 1 ];
          
-orders = [4, 4, 4, 2, 2];
+orders = [4, 4, 4, 2, 2, 2];
 
 
 %% Define interpolator
@@ -96,7 +96,7 @@ while converge==0 && iteration < maxiteration
     
     [coeff,B]=funfitxy(cdef, grid, x);
     
-    fobj = @(xt) step_residuals_nodiff(grid, xt, e, w, model.params, model, coeff, cdef, hom);
+    fobj = @(xt) step_residuals_crisis(grid, xt, e, w, model.params, model, coeff, cdef, hom);
     [x_up, nit] = newton_solver_diff(fobj, x, 50);
     
     err=sum(sum(abs(x-x_up)));

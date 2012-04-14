@@ -27,11 +27,12 @@ paramirf.namepercent={'R','RL', 'PI', 'x','u','z','rk'}; %give the name of varia
 %Define exogeneous path
 e_z=zeros(N,1);
 e_u=[100*0.0089; zeros(N-1,1)];
+ecrisis=zeros(N,1);
 
 % e_z=[100*0.007; zeros(N-1,1)];
 % e_u=zeros(N,1);
 
-exo.e=[e_z,e_u];
+exo.e=[e_z,e_u,ecrisis];
 
 %The shape of irf's benchmarks
 T=40;
