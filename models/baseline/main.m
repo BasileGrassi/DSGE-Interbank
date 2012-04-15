@@ -46,7 +46,7 @@ ss = model.s_ss;
 smin = [  20, 2, 2, -0.03, -0.03, 0 ];
 smax = [ 27, 3.6, 3.6, 0.03, 0.03, 1 ];
          
-orders = [4, 4, 4, 2, 2, 2];
+orders = [5, 4, 4, 3, 3, 2];
 
 
 %% Define interpolator
