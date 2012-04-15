@@ -43,10 +43,10 @@ m = [0 0];
 %% Define the grid
 ss = model.s_ss;
 
-smin = [  22, 2.1, 2.1, -0.03, -0.03 ];
-smax = [ 25, 3.5, 3.5, 0.03, 0.03 ];
+smin = [  20, 2, 2, -0.03, -0.03 ];
+smax = [ 27, 3.6, 3.6, 0.03, 0.03 ];
          
-orders = [7, 4, 4, 3, 3];
+orders = [6, 5, 5, 3, 3];
 
 
 %% Define interpolator
@@ -59,8 +59,8 @@ ns = size(grid,1)
 
 
 %% Convergence criteria
-tol=1e-5;
-maxiteration=500;
+tol=1e-10;
+maxiteration=5000;
 
 % Initialization using first order d.r.
 x_ss = model.x_ss;
