@@ -27,6 +27,7 @@ function RES = irf(exo, paramirf, grid, rule, model)
 % rule.x= value of the controls on each point of the grid
 % rule.cdef= set of function. The interpolante are in this set
 % rule.coeff= the coefficient which sum up the interpolate function
+% rule.s_rss= the risky steady-state
 
 %The model
 % model.s_ss= steady-state value of the states
@@ -63,13 +64,14 @@ aux=zeros(N,n_aux);
 
 
 params=model.params;
-s_ss=model.s_ss;
-x_ss=model.x_ss;
-aux_ss=a(s_ss',x_ss',params);
+s_rss=rule.s_rss;
+M = funeval(coeff, cdef, s_rss');
+x_rss=M(:,:,1)';
+aux_rss=a(s_rss',x_rss',params);
 
 for t=1:N;
     if t==1; 
-        s(1,:)=g(s_ss',x_ss',e(1,:),params);
+        s(1,:)=g(s_rss',x_rss',e(1,:),params);
         M = funeval(coeff, cdef, s(1,:));
         x(1,:)=M(:,:,1);
         aux(1,:)=a(s(1,:),x(1,:),params);
@@ -93,22 +95,22 @@ RES.aux=aux;
 %% Conputing deviation from steady state, diff with steady state
 
 %Compute the percentage deviation from steady-state
-s_ssv=ones(N,1)*(s_ss');
-x_ssv=ones(N,1)*(x_ss');
-aux_ssv=ones(N,1)*(aux_ss);
+s_rssv=ones(N,1)*(s_rss');
+x_rssv=ones(N,1)*(x_rss');
+aux_rssv=ones(N,1)*(aux_rss);
 
-dev_s=(s-s_ssv)./(s_ssv);
-dev_x=(x-x_ssv)./(x_ssv);
-dev_aux=(aux-aux_ssv)./(aux_ssv);
+dev_s=(s-s_rssv)./(s_rssv);
+dev_x=(x-x_rssv)./(x_rssv);
+dev_aux=(aux-aux_rssv)./(aux_rssv);
 
 RES.dev_s=dev_s;
 RES.dev_x=dev_x;
 RES.dev_aux=dev_aux;
 
 %Compute the difference with steady-state
-diff_s=(s-s_ssv);
-diff_x=(x-x_ssv);
-diff_aux=(aux-aux_ssv);
+diff_s=(s-s_rssv);
+diff_x=(x-x_rssv);
+diff_aux=(aux-aux_rssv);
 
 RES.diff_s=diff_s;
 RES.diff_x=diff_x;

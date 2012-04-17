@@ -41,19 +41,19 @@ m = [0 0];
 %% Define the grid
 ss = model.s_ss;
 
-smin = [  11, -5.8,-5.8, -0.03, -0.03 ];
-smax = [ 14, 6.3, 6.3, 0.03, 0.03 ];
+smin = [  20, 2.5, 2.5, -0.03, -0.03 ];
+smax = [ 23, 2.9, 2.9, 0.03, 0.03 ];
          
-orders = [5, 5, 5, 2, 2];
+orders = [5, 4, 4, 2, 2];
 
 
 %% Define interpolator
 
-cdef=fundefn('lin', orders, smin, smax);
+cdef=fundefn('spli', orders, smin, smax);
 nodes = funnode(cdef);
 grid = gridmake(nodes);
 
-ns = size(grid,1);
+ns = size(grid,1)
 
 
 %% Convergence criteria
@@ -107,6 +107,7 @@ while converge==0 && iteration < maxiteration
     
     gain=err/err0;
     fprintf('%d\t%e\t%.2f\t%.2f\t%d\t%.2f\n', iteration, err, gain, hom, nit, elapsed)
+    %disp(sum(abs(x-x_up)));
 
     
     if (err < 1) && (hom_i < hom_n);
@@ -144,5 +145,9 @@ rule.x=x;
 rule.cdef=cdef;
 rule.coeff=coeff;
 
+%% Solve for the risky steady-state
+ts_rss=risky_steady_state(model,rule);
+rule.s_rss=ts_rss';
 
+%% Save everything
 save([model_name '_sol'],'model','grid','rule');

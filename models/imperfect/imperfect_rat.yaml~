@@ -96,7 +96,7 @@ calibration:
         pro: 1/(theta-1)*(theta/(theta-1))^(-theta)*(mu)^(1-theta)*y
         I: k*(1-(1-delta)*Phi)
         c: y-I
-        Enu_def: me+sigma-(nu_def+sigma)*exp(-(nu_def-me)/sigma)
+        Enu_def: (me+sigma-(nu_def+sigma)*exp(-(nu_def-me)/sigma))/Phi
         mL: (1+PI)*(c+d)
         m: mL
         mm: (1+PI)*m

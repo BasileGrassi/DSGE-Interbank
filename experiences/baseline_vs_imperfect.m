@@ -12,7 +12,6 @@ addpath('../solver_lib')
 %this was compute using iterative_main
 %contains model, grid and rule
 model_name = 'baseline';
-
 addpath(['../models/', model_name])
 
 load baseline_sol;
@@ -32,7 +31,7 @@ e_u=[0.0089; zeros(N-1,1)];
 exo.e=[e_z,e_u];
 
 %The shape of irf's benchmarks
-T=70;
+T=20;
 paramirf.range=[1 T];
 paramirf.style='-b';
 paramirf.width=2;
@@ -41,33 +40,22 @@ paramirf.width=2;
 RES_baseline=irf_risky_ss(exo, paramirf, grid, rule, model);
 
 
-%% Linear Decision Rule
+%% Imperfect
+model_name = 'imperfect';
 
+addpath(['../models/', model_name])
+
+load imperfect_sol;
 
 %The shape of irf's benchmarks
 paramirf.range=[1 T];
 paramirf.style='--r';
 paramirf.width=2;
 
-ns=grid.ns;
-x_ss = model.x_ss;
-s_ss = model.s_ss;
-X_s = initial_guess(model,model.s_ss,model.x_ss);
-x=x_ss*ones(1,ns)+X_s*(grid.grid'-s_ss*ones(1,ns));
-x=x';
-
-[coeff_lin,B]=funfitxy(rule.cdef, grid.grid, x);
-
-
-rule_dr1.x=x;
-rule_dr1.coeff=coeff_lin;
-rule_dr1.cdef=rule.cdef;
-
-
 %Compute and Plot IRF
-RES_dr1=irf(exo, paramirf, grid, rule_dr1, model);
+RES_imperfect=irf_risky_ss(exo, paramirf, grid, rule, model);
 
-%% Inputs 'struture description
+%% Inputs 'struture description of irf
 
 %The exogenous shocks
 % exo.n= # of exogeneous variables

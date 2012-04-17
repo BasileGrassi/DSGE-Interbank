@@ -1,34 +1,46 @@
-function [RES] = fun_nu_def(var,me,sigma, params,pri)
+function [ RES] = fun_nu_def(var,vartheta,dist,distparams, parameters, params,pri)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
 nu_def=var(1);
 k=var(2);
 RL=var(3);
-d = var(4);
+d=var(4);
 
-beta=0.989;%params(1);
-alpha=0.36;%params(2);
-delta= 0.019;%params(3);
-x_ss=0.0125;% params(4);
-theta=6;% params(5);
-vartheta=params(1);
+%fundamental parameters
+ibeta=strmatch('beta',parameters);
+ialpha=strmatch('alpha',parameters);
+idelta=strmatch('delta',parameters);
+ix_ss=strmatch('x_ss',parameters);
+itheta=strmatch('theta',parameters);
+
+
+beta=params(ibeta);
+alpha=params(ialpha);
+delta=params(idelta);
+x_ss=params(ix_ss);
+x=x_ss;
+theta=params(itheta);
+
+%Imperfect information parameters
+ivartheta=strmatch('vartheta',parameters);
+%vartheta=params(ivartheta);
+
 
 R=(1+x_ss)/(beta);
-x=x_ss;
+
 
 
 z=0;
 
 %fraction of defaulters
-Phi=1-exp(-(nu_def-me)/sigma);
+Phi=dist.cdf(nu_def,distparams);
 
 %
-Enu_def=me+sigma-(nu_def+sigma)*exp(-(nu_def-me)/sigma);
+Enu_def=dist.Etr(nu_def,distparams);
 
 %return on capital
 rk=1/(beta*Phi)+delta-1;
-
 
 %marginal cost
 mu= Phi^(1/(theta-1))*(theta-1)/theta;
@@ -56,12 +68,10 @@ if pri==1;
     end;
 end;
 
-%RES(1) = nu_def-min(nu_rat , nu_strat);
-RES(1) = nu_def- nu_strat;
+RES(1) = nu_def-min(nu_rat , nu_strat); %RES(1) = nu_def - nu_strat;
 RES(2) = rk-mu*alpha*k^(alpha-1);
 RES(3) = Phi*(RL-R)-(1-Phi)*vartheta*(R-1)/RL;
-%RES(4) = Phi*(d+x)+(1-Phi)*lhat-Phi*Enu_def*w;
-RES(4)= d-(Enu_def*w*Phi-(1-Phi)*(k+x)/RL)/(Phi-(1-Phi)*(R-1)/RL);
+RES(4)= d-(Enu_def*w/exp(z)*Phi-(1-Phi)*(k+x)/RL-Phi*x)/(Phi-(1-Phi)*(R-1)/RL); %RES(4) = Phi*(d+x)+(1-Phi)*lhat-Phi*Enu_def*w;
 
 end
 

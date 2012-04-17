@@ -48,7 +48,7 @@ equations:
 
     arbitrage:
         - lamb = beta*(1+rk(1)-delta)*Phi(1)*lamb(1)                                | -inf <= lamb <= inf
-        - lamb = beta*lamb(1)*R(1)/(1+PI(1))                                        | -inf <= R <= inf
+        - lamb = beta*uc(1)/(1+PI(1))                                        | -inf <= R <= inf
         - uc = beta*R*uc(1)/(1+PI(1))                                               | -inf <= PI <= inf
         - R = RL                                                                    | -inf <= RL <= inf
         - nu_def=exp(z)*(pro-RL*k)/(w*RL)                                           | -inf <= nu_def <= inf

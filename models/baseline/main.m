@@ -16,18 +16,13 @@ addpath('../../solver_lib')
 %% set model name
 model_name = 'baseline';
 
-%% Parameters
 none=[];
-
 
 model = feval( [model_name '_model']);
 
 
-% [x_ss,s_ss]=steady_state(model);
-% model.x_ss=x_ss';
-% model.s_ss=s_ss';
 
-% Define shocks
+%% Define shocks
 N_shocks = [5 5];
 
 isigma_z=strmatch('sigma_z',model.parameters, 'exact');
@@ -73,7 +68,7 @@ X_s=real(X_s);
 xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
 x=xinit';
 
-
+%% Policy Iteration
 iteration=1;
 converge=0;
 
@@ -133,6 +128,11 @@ if iteration > maxiteration
     disp('The model could not be solved');
 end
 
+
+%% Solve for the risky steady-state
+
+
+
 %% Save the grid
 grille.smax= smax;
 grille.smin=smin;
@@ -149,5 +149,9 @@ rule.x=x;
 rule.cdef=cdef;
 rule.coeff=coeff;
 
+%% Solve for the risky steady-state
+ts_rss=risky_steady_state(model,rule);
+rule.s_rss=ts_rss';
 
+%% Save everything
 save([model_name '_sol'],'model','grid','rule');

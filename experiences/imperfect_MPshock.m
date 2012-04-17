@@ -23,13 +23,13 @@ N=70;
 exo.T=N;
 paramirf.namepercent={'R','RL', 'PI', 'x','u','z','rk'}; %give the name of variable which you want differenc from steady state
 
-%% Baseline
+%% Imperfect
 %Define exogeneous path
 e_z=zeros(N,1);
-e_u=[100*0.0089; zeros(N-1,1)];
+e_u=[0.0089; zeros(N-1,1)];
 
 % e_z=[100*0.007; zeros(N-1,1)];
-% e_u=zeros(N,1);
+%e_u=zeros(N,1);
 
 exo.e=[e_z,e_u];
 
@@ -40,7 +40,7 @@ paramirf.style='-b';
 paramirf.width=2;
 
 %Compute and Plot IRF
-%RES_baseline=irf(exo, paramirf, grid, rule, model);
+RES_imperfect=irf_risky_ss(exo, paramirf, grid, rule, model);
 
 
 %% Linear Decision Rule
