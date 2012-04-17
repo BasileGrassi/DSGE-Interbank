@@ -26,8 +26,8 @@ paramirf.namepercent={'R','RL', 'PI', 'x','u','z','rk'}; %give the name of varia
 %% Baseline
 %Define exogeneous path
 e_z=zeros(N,1);
-e_u=[100*0.0089; zeros(N-1,1)];
-ecrisis=zeros(N,1);
+e_u=zeros(N,1);;
+ecrisis=zeros(N,1); ecrisis(10)=1;
 
 % e_z=[100*0.007; zeros(N-1,1)];
 % e_u=zeros(N,1);
