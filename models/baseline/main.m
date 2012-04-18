@@ -38,10 +38,10 @@ m = [0 0];
 %% Define the grid
 ss = model.s_ss;
 
-smin = [  20, 2, 2, -0.03, -0.03 ];
-smax = [ 27, 3.6, 3.6, 0.03, 0.03 ];
+smin = [  15, 2, 2, -0.03, -0.03 ];
+smax = [ 30, 3.6, 3.6, 0.03, 0.03 ];
          
-orders = [6, 5, 5, 3, 3];
+orders = [6, 4, 4, 3, 3];
 
 
 %% Define interpolator

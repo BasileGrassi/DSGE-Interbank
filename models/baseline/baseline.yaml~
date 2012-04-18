@@ -1,4 +1,5 @@
 name: DSGE Interbank Grassi 2012
+#Perfect information case
 #with inelastic labor and log utility
 #Warning the definition of mm=M/P(-1) so the real money balance is m = mm/(1+PI)
 

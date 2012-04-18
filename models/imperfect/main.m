@@ -7,6 +7,9 @@
 % Do not forget to add the compecon libraries
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+clear all
+
 %% Addpath libraries
 
 addpath('../../solver_lib')
@@ -41,15 +44,15 @@ m = [0 0];
 %% Define the grid
 ss = model.s_ss;
 
-smin = [  20, 2.5, 2.5, -0.03, -0.03 ];
-smax = [ 23, 2.9, 2.9, 0.03, 0.03 ];
+smin = [  15, 2.5, 2.5, -0.03, -0.03 ];
+smax = [ 40, 2.9, 2.9, 0.03, 0.03 ];
          
-orders = [5, 4, 4, 2, 2];
+orders = [8, 4, 4, 3, 3];
 
 
 %% Define interpolator
 
-cdef=fundefn('spli', orders, smin, smax);
+cdef=fundefn('lin', orders, smin, smax);
 nodes = funnode(cdef);
 grid = gridmake(nodes);
 
@@ -107,7 +110,7 @@ while converge==0 && iteration < maxiteration
     
     gain=err/err0;
     fprintf('%d\t%e\t%.2f\t%.2f\t%d\t%.2f\n', iteration, err, gain, hom, nit, elapsed)
-    %disp(sum(abs(x-x_up)));
+    disp(sum(abs(x-x_up)));
 
     
     if (err < 1) && (hom_i < hom_n);

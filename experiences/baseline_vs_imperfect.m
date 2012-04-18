@@ -45,7 +45,7 @@ model_name = 'imperfect';
 
 addpath(['../models/', model_name])
 
-load imperfect_sol;
+load imperfect_close_sol;
 
 %The shape of irf's benchmarks
 paramirf.range=[1 T];
@@ -54,6 +54,20 @@ paramirf.width=2;
 
 %Compute and Plot IRF
 RES_imperfect=irf_risky_ss(exo, paramirf, grid, rule, model);
+
+
+%% Rationing ?
+
+
+aux=model.a(grid.grid,rule.x,model.params);
+regime=aux(:,15)<aux(:,16);
+mean(regime)
+sum(regime)
+
+diff=aux(:,15)-aux(:,16);
+[m, i]=min(diff);
+m
+i
 
 %% Inputs 'struture description of irf
 
