@@ -44,10 +44,10 @@ m = [0 0];
 %% Define the grid
 ss = model.s_ss;
 
-smin = [  15, 2.5, 2.5, -0.03, -0.03 ];
-smax = [ 40, 2.9, 2.9, 0.03, 0.03 ];
+smin = [  20, 2.5, 2.5, -0.03, -0.03 ];
+smax = [ 30, 2.9, 2.9, 0.03, 0.03 ];
          
-orders = [8, 4, 4, 3, 3];
+orders = [5, 4, 4, 2, 2];
 
 
 %% Define interpolator
@@ -108,9 +108,16 @@ while converge==0 && iteration < maxiteration
     elapsed = double(t1 - t0)/1e6;
     t0 = t1;
     
+    aux=model.a(grid,x,model.params);
+    regime=aux(:,15)<aux(:,16);
+    m=mean(regime);
+    
     gain=err/err0;
     fprintf('%d\t%e\t%.2f\t%.2f\t%d\t%.2f\n', iteration, err, gain, hom, nit, elapsed)
-    disp(sum(abs(x-x_up)));
+    %disp(sum(abs(x-x_up)));
+    
+
+    %sum(regime)
 
     
     if (err < 1) && (hom_i < hom_n);

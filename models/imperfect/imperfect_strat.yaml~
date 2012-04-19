@@ -75,7 +75,7 @@ calibration:
         me: -30
         xi: 0.9
         sigma: 0.2187
-        vartheta: 0.8
+        vartheta: 0.5
 
     steady_state:
         z: 0

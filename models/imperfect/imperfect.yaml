@@ -10,9 +10,9 @@ declarations:
 
     states: [k, mm, mL, z, u]
 
-    controls: [lamb, R, PI, RL, nu_def]
+    controls: [R, PI, RL, nu_def]
 
-    auxiliary: [Phi, mu, y, w, pro,rk, x, Enu_def, d, m, c, uc, I, lhat, nu_rat, nu_strat]
+    auxiliary: [Phi, mu, y, w, pro,rk, x, Enu_def, d, m, c, uc, I, lamb, lhat, nu_rat, nu_strat]
 
     shocks: [e_z,e_u]
 
@@ -48,12 +48,12 @@ equations:
         - c = mL/(1+PI)-d
         - uc = 1/c
         - I = y - c
+        - lamb = uc/R
 
 
     arbitrage:
-        - lamb = beta*(1+rk(1)-delta)*Phi(1)*lamb(1)                         | -inf <= lamb <= inf
-        - lamb = beta*uc(1)/(1+PI(1))                                        | -inf <= R <= inf
-        - uc = beta*R*uc(1)/(1+PI(1))                                        | -inf <= PI <= inf
+        - lamb = beta*(1+rk(1)-delta)*Phi(1)*lamb(1)                         | -inf <= R <= inf
+        - lamb = beta*uc(1)/(1+PI(1))                                        | -inf <= PI <= inf
         - (RL-R)*Phi = (1-Phi)*vartheta*(R-1)/RL                             | -inf <= RL <= inf
         - nu_def=min(nu_rat,nu_strat)                                                    | -inf <= nu_def <= inf
 
