@@ -15,7 +15,7 @@ options=optimset('display','off','MaxFunEvals',50000,'MaxIter',50000);
 dist=dist_genpareto3p;
 
 
-varinit=[-9.2846, 12.7096, 1.0238, -7.9165];
+varinit=[-1.2, 1.02, 1.0238, 0.8];
 
 vartheta=[0.1:0.1:1];
 nvartheta=length(vartheta);
@@ -77,7 +77,7 @@ xlabel('vartheta');
 %% Solve for a value of theta
 disp('--------------Solve for a value of vartheta---------------')
 
-vartheta=0.5;
+vartheta=0.8;
 
 fun= @(var) fun_nu_def(var,vartheta,dist,dist.params, model.parameters, model.params,0);
 [x_sol,Fval,exitflag] = fsolve(fun,varinit,options);

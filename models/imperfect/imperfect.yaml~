@@ -12,7 +12,7 @@ declarations:
 
     controls: [R, PI, RL, nu_def]
 
-    auxiliary: [Phi, mu, y, w, pro,rk, x, Enu_def, d, m, c, uc, I, lamb, lhat, nu_rat, nu_strat]
+    auxiliary: [Phi, mu, w, y, pro,rk, x, Enu_def, d, m, c, uc, I,lamb, lhat, nu_rat, nu_strat]
 
     shocks: [e_z,e_u]
 
@@ -40,22 +40,23 @@ equations:
         - x = u+x_ss
         - Enu_def = sigma+nu_def*(1+xi*(nu_def-me)/sigma)^(-1/xi)/Phi
         - d=(Enu_def*w/exp(z)*Phi-(1-Phi)*(k+x)/RL-Phi*x)/(Phi-(1-Phi)*(R-1)/RL)
-        - lhat= (k+x-(R-1)*d)/RL
-        - nu_rat=(d+x+lhat)/(w/exp(z))
-        - nu_strat=(pro+(RL-R)*d+RL*x-vartheta*lhat)/(RL*(w/exp(z)))
 #third part
         - m = mm/(1+PI)
         - c = mL/(1+PI)-d
         - uc = 1/c
         - I = y - c
         - lamb = uc/R
+#specific to imperfect case
+        - lhat= (k+x-(R-1)*d)/RL
+        - nu_rat=(d+x+lhat)/(w/exp(z))
+        - nu_strat=(pro+(RL-R)*d+RL*x-vartheta*lhat)/(RL*(w/exp(z)))
 
 
     arbitrage:
         - lamb = beta*(1+rk(1)-delta)*Phi(1)*lamb(1)                         | -inf <= R <= inf
         - lamb = beta*uc(1)/(1+PI(1))                                        | -inf <= PI <= inf
         - (RL-R)*Phi = (1-Phi)*vartheta*(R-1)/RL                             | -inf <= RL <= inf
-        - nu_def=min(nu_rat,nu_strat)                                                    | -inf <= nu_def <= inf
+        - nu_def = min(nu_strat,nu_rat)                                                    | -inf <= nu_def <= inf
 
 
 calibration:
@@ -71,11 +72,11 @@ calibration:
         rho: 0.95
         sigma_z: 0.007
         sigma_u: 0.0089
-        spreadq: 0.0095
+        spreadq: 0.01
         me: -30
-        xi: 0.9
-        sigma: 0.2187
-        vartheta: 0.5
+        xi: -3
+        sigma: 0.3769
+        vartheta: 0.8
 
     steady_state:
         z: 0
@@ -83,10 +84,10 @@ calibration:
         PI: x_ss
         x: x_ss
         R: (1+PI)/beta
-        RL: R+0.000073664
-        nu_def:  -7.0316
-        k: 26.7792
-        d: 0.1242
+        RL: 1.0277
+        nu_def:  -1.4053
+        k: 1.2995
+        d: -0.2391
 #Solvable for a given nu_def and a given k, d and RL
         lhat: (k+x-(R-1)*d)/RL
         Phi: 1-(1+xi*(nu_def-me)/sigma)^(-1/xi)

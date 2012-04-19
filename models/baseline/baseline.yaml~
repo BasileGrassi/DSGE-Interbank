@@ -12,7 +12,7 @@ declarations:
 
     controls: [R, PI, RL, nu_def]
 
-    auxiliary:  [Phi, mu, y, w, pro,rk, x, Enu_def, d, m, c, uc, I, lamb]
+    auxiliary:  [Phi, mu, w, y, pro,rk, x, Enu_def, d, m, c, uc, I, lamb]
 
     shocks: [e_z,e_u]
 
@@ -69,7 +69,7 @@ calibration:
         rho: 0.95
         sigma_z: 0.007
         sigma_u: 0.0089
-        spreadq: 0.0095
+        spreadq: 0.01 #0.0095
         me: -30
         xi: 0.9
         sigma: xi*(nu_def-me)/((1-Phi)^(-xi)-1)
@@ -81,7 +81,7 @@ calibration:
         x: x_ss
         R: (1+PI)/beta
         RL: R
-        Phi: 1/(beta*spreadq+1)
+        Phi: 0.8 #spreadq/delta #1/(beta*spreadq+1)
         rk: 1/(beta*Phi)-1+delta
         mu: Phi^(1/(theta-1))*(theta-1)/theta
         k: (rk/(mu*alpha))^(1/(alpha-1))

@@ -37,8 +37,8 @@ function [out1] = dist_info() % informations about the model
 
     di = struct;
     di.parameters = { 'me','sigma', 'xi'};
-    di.params = [ -30 0.2187 0.9];    
-    di.support=[-30 10];
+    di.params = [ -3   0.3769 0.9];    
+    di.support=[-3 10];
     out1 = di;
 
 end

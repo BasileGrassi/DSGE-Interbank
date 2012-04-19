@@ -44,8 +44,8 @@ m = [0 0];
 %% Define the grid
 ss = model.s_ss;
 
-smin = [  22.8, 2.5, 2.5, -0.025, -0.03 ];
-smax = [ 30.8, 3, 3, 0.025, 0.03 ];
+smin = [  1, 0.2, 0.2, -0.025, -0.03 ];
+smax = [ 1.6, 0.8, 0.8, 0.025, 0.03 ];
          
 orders = [3, 3, 3, 3, 3];
 
@@ -66,13 +66,14 @@ maxiteration=5000;
 %% Initialization using first order d.r.
 x_ss = model.x_ss;
 s_ss = model.s_ss;
-X_s = model.X{2};
-xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
-x=xinit';
-% X_s=initial_guess(model, model.s_ss, model.x_ss);
-% X_s=real(X_s);
+
+% X_s = model.X{2};
 % xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
 % x=xinit';
+X_s=initial_guess(model, model.s_ss, model.x_ss);
+X_s=real(X_s);
+xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
+x=xinit';
 
 %% Iterate
 iteration=1;
