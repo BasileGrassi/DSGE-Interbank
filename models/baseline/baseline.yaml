@@ -12,7 +12,7 @@ declarations:
 
     controls: [R, PI, RL, nu_def]
 
-    auxiliary:  [Phi, mu, y, w, pro,rk, x, Enu_def, d, m, c, uc, I, lamb]
+    auxiliary:  [Phi, mu, w, y, pro,rk, x, Enu_def, d, m, c, uc, I, lamb]
 
     shocks: [e_z,e_u]
 

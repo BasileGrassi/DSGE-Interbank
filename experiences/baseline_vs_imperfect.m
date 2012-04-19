@@ -41,11 +41,11 @@ RES_baseline=irf_risky_ss(exo, paramirf, grid, rule, model);
 
 
 %% Imperfect
-model_name = 'imperfect';
+model_name = 'imperfect_rat';
 
 addpath(['../models/', model_name])
 
-load imperfect_close_sol;
+load imperfect_sol;
 
 %The shape of irf's benchmarks
 paramirf.range=[1 T];
@@ -57,14 +57,15 @@ RES_imperfect=irf_risky_ss(exo, paramirf, grid, rule, model);
 
 
 %% Rationing ?
-
+inu_rat=strmatch('nu_rat',model.auxiliaries,'exact');
+inu_strat=strmatch('nu_strat',model.auxiliaries,'exact');
 
 aux=model.a(grid.grid,rule.x,model.params);
-regime=aux(:,15)<aux(:,16);
+regime=aux(:,inu_rat)<aux(:,inu_strat);
 mean(regime)
 sum(regime)
 
-diff=aux(:,15)-aux(:,16);
+diff=aux(:,inu_rat)-aux(:,inu_strat);
 [m, i]=min(diff);
 m
 i

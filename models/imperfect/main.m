@@ -8,7 +8,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-clear all
+%clear all
 
 %% Addpath libraries
 
@@ -44,10 +44,10 @@ m = [0 0];
 %% Define the grid
 ss = model.s_ss;
 
-smin = [  20, 2.5, 2.5, -0.03, -0.03 ];
-smax = [ 30, 2.9, 2.9, 0.03, 0.03 ];
+smin = [  22.8, 2.5, 2.5, -0.025, -0.03 ];
+smax = [ 30.8, 3, 3, 0.025, 0.03 ];
          
-orders = [5, 4, 4, 2, 2];
+orders = [3, 3, 3, 3, 3];
 
 
 %% Define interpolator
@@ -63,18 +63,18 @@ ns = size(grid,1)
 tol=1e-10;
 maxiteration=5000;
 
-% Initialization using first order d.r.
+%% Initialization using first order d.r.
 x_ss = model.x_ss;
 s_ss = model.s_ss;
-% X_s = model.X{2}
-% xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
-% x=xinit';
-X_s=initial_guess(model, model.s_ss, model.x_ss);
-X_s=real(X_s);
+X_s = model.X{2};
 xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
 x=xinit';
+% X_s=initial_guess(model, model.s_ss, model.x_ss);
+% X_s=real(X_s);
+% xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
+% x=xinit';
 
-
+%% Iterate
 iteration=1;
 converge=0;
 
@@ -156,8 +156,10 @@ rule.cdef=cdef;
 rule.coeff=coeff;
 
 %% Solve for the risky steady-state
+disp('Solving for the risky steady state.');
+disp('_________________________________________________________');
 ts_rss=risky_steady_state(model,rule);
 rule.s_rss=ts_rss';
-
+disp('_________________________________________________________');
 %% Save everything
 save([model_name '_sol'],'model','grid','rule');

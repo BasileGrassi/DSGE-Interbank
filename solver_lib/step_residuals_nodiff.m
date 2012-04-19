@@ -52,7 +52,7 @@ function  F = step_residuals_nodiff( s, x, e0, w, params, model, coeff, cdef, ho
     % future controls
     XX = funeval(coeff, cdef, SS);
     
-    XX(1,:)=XX(1,:)*hom+model.x_ss(1);
+    XX(1,:)=XX(1,:);
         
     % residuals of arbitrage conditions (non integrated)
     [FF] = f(ss, xx, SS, XX, params);

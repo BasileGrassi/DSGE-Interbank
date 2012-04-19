@@ -10,9 +10,9 @@ declarations:
 
     states: [k, mm, mL, z, u]
 
-    controls: [lamb, R, PI, RL, nu_def]
+    controls: [R, PI, RL, nu_def]
 
-    auxiliary: [Phi, mu, y, w, pro,rk, x, Enu_def, d, m, c, uc, I, lhat, nu_rat, nu_strat]
+    auxiliary: [Phi, mu, w, y, pro,rk, x, Enu_def, d, m, c, uc, I,lamb, lhat, nu_rat, nu_strat]
 
     shocks: [e_z,e_u]
 
@@ -40,20 +40,21 @@ equations:
         - x = u+x_ss
         - Enu_def = sigma+nu_def*(1+xi*(nu_def-me)/sigma)^(-1/xi)/Phi
         - d=(Enu_def*w/exp(z)*Phi-(1-Phi)*(k+x)/RL-Phi*x)/(Phi-(1-Phi)*(R-1)/RL)
-        - lhat= (k+x-(R-1)*d)/RL
-        - nu_rat=(d+x+lhat)/(w/exp(z))
-        - nu_strat=(pro+(RL-R)*d+RL*x-vartheta*lhat)/(RL*(w/exp(z)))
 #third part
         - m = mm/(1+PI)
         - c = mL/(1+PI)-d
         - uc = 1/c
         - I = y - c
+        - lamb = uc/R
+#specific to imperfect case
+        - lhat= (k+x-(R-1)*d)/RL
+        - nu_rat=(d+x+lhat)/(w/exp(z))
+        - nu_strat=(pro+(RL-R)*d+RL*x-vartheta*lhat)/(RL*(w/exp(z)))
 
 
     arbitrage:
-        - lamb = beta*(1+rk(1)-delta)*Phi(1)*lamb(1)                         | -inf <= lamb <= inf
-        - lamb = beta*uc(1)/(1+PI(1))                                        | -inf <= R <= inf
-        - uc = beta*R*uc(1)/(1+PI(1))                                        | -inf <= PI <= inf
+        - lamb = beta*(1+rk(1)-delta)*Phi(1)*lamb(1)                         | -inf <= R <= inf
+        - lamb = beta*uc(1)/(1+PI(1))                                        | -inf <= PI <= inf
         - (RL-R)*Phi = (1-Phi)*vartheta*(R-1)/RL                             | -inf <= RL <= inf
         - nu_def=nu_strat                                                    | -inf <= nu_def <= inf
 
