@@ -41,7 +41,7 @@ RES_baseline=irf_risky_ss(exo, paramirf, grid, rule, model);
 
 
 %% Imperfect
-model_name = 'imperfect_rat';
+model_name = 'imperfect';
 
 addpath(['../models/', model_name])
 
