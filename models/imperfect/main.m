@@ -96,7 +96,7 @@ while converge==0 && iteration < maxiteration
     
     [coeff,B]=funfitxy(cdef, grid, x);
     
-    fobj = @(xt) step_residuals_nodiff(grid, xt, e, w, model.params, model, coeff, cdef, hom);
+    fobj = @(xt) step_residuals_nodiff_hom(grid, xt, e, w, model.params, model, coeff, cdef, hom);
     [x_up, nit] = newton_solver_diff(fobj, x, 50);
     
     err=sum(sum(abs(x-x_up)));
@@ -107,14 +107,14 @@ while converge==0 && iteration < maxiteration
     t1 = tic;
     elapsed = double(t1 - t0)/1e6;
     t0 = t1;
-    
-    aux=model.a(grid,x,model.params);
-    regime=aux(:,15)<aux(:,16);
-    m=mean(regime);
+%     
+%     aux=model.a(grid,x,model.params);
+%     regime=aux(:,15)<aux(:,16);
+%     m=mean(regime);
     
     gain=err/err0;
     fprintf('%d\t%e\t%.2f\t%.2f\t%d\t%.2f\n', iteration, err, gain, hom, nit, elapsed)
-    %disp(sum(abs(x-x_up)));
+    disp(sum(abs(x-x_up)));
     
 
     %sum(regime)

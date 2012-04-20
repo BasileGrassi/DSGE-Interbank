@@ -12,7 +12,7 @@ declarations:
 
     controls: [R, PI, RL, nu_def]
 
-    auxiliary: [Phi, mu, w, y, pro,rk, x, Enu_def, d, m, c, uc, I,lamb, lhat, nu_rat, nu_strat]
+    auxiliary: [Phi, mu, w, y, pro,rk, x, Enu_def, d, m, c, uc, I,lamb, lhat, nu_rat, nu_strat, nu_star]
 
     shocks: [e_z,e_u]
 
@@ -50,14 +50,14 @@ equations:
         - lhat= (k+x-(R-1)*d)/RL
         - nu_rat=(d+x+lhat)/(w/exp(z))
         - nu_strat=(pro+(RL-R)*d+RL*x-vartheta*lhat)/(RL*(w/exp(z)))
+        - nu_star = (pro-RL*k)/(RL*(w/exp(z)))
 
 
     arbitrage:
         - lamb = beta*(1+rk(1)-delta)*Phi(1)*lamb(1)                         | -inf <= R <= inf
         - lamb = beta*uc(1)/(1+PI(1))                                        | -inf <= PI <= inf
-        - (RL-R)*Phi = (1-Phi)*vartheta*(R-1)/RL                             | -inf <= RL <= inf
+        - (RL-R) = (1-Phi)/Phi*vartheta*(R-1)/RL                             | -inf <= RL <= inf
         - nu_def=nu_strat                                                    | -inf <= nu_def <= inf
-
 
 calibration:
 
@@ -106,6 +106,7 @@ calibration:
         mm: (1+PI)*m
         uc: 1/c
         lamb: uc/R
+        nu_star: (pro-RL*k)/(RL*(w/exp(z)))
 
 
 
