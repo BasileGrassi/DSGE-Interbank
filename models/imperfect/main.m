@@ -8,14 +8,14 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%clear all
+clear all
 
 %% Addpath libraries
 
 addpath('../../solver_lib')
 
 %% set model name
-model_name = 'imperfect';
+model_name = 'imperfect_xp';
 
 %% Parameters
 none=[];
@@ -44,10 +44,10 @@ m = [0 0];
 %% Define the grid
 ss = model.s_ss;
 
-smin = [  20, 2, 2, -0.025, -0.03 ];
-smax = [ 27, 2.8, 2.8, 0.025, 0.03 ];
+smin = [  17, 1.8, 1.8, -0.025, -0.03 ];
+smax = [ 24, 2.6, 2.6, 0.025, 0.03 ];
          
-orders = [3, 3, 3, 3, 3];
+orders = [4, 4, 4, 3, 3];
 
 
 %% Define interpolator
@@ -107,10 +107,12 @@ while converge==0 && iteration < maxiteration
     t1 = tic;
     elapsed = double(t1 - t0)/1e6;
     t0 = t1;
-%     
+     
+%     irat=strmatch('rat',model.auxiliaries,'exact');
+%     iperfect=strmatch('perfect',model.auxiliaries,'exact');
 %     aux=model.a(grid,x,model.params);
-%     regime=aux(:,15)<aux(:,16);
-%     m=mean(regime);
+%     disp(mean(aux(:,irat)));
+%     disp(mean(aux(:,iperfect)));
     
     gain=err/err0;
     fprintf('%d\t%e\t%.2f\t%.2f\t%d\t%.2f\n', iteration, err, gain, hom, nit, elapsed)

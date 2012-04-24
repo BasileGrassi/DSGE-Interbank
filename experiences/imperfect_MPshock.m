@@ -11,11 +11,11 @@ addpath('../solver_lib')
 %% Load the model and the decision rule
 %this was compute using iterative_main
 %contains model, grid and rule
-model_name = 'imperfect';
+model_name = 'imperfect_xp';
 
-addpath(['../models/', model_name])
+%addpath(['../models/', model_name])
 
-load imperfect_sol;
+load imperfect_xp_sol;
 
 %% Configure the exogenous fundalmentals
 exo.n=2;
@@ -26,7 +26,7 @@ paramirf.namepercent={'R','RL', 'PI', 'x','u','z','rk'}; %give the name of varia
 %% Imperfect
 %Define exogeneous path
 e_z=zeros(N,1);
-e_u=[0.0089; zeros(N-1,1)];
+e_u=[-0.0089; zeros(N-1,1)];
 
 % e_z=[100*0.007; zeros(N-1,1)];
 %e_u=zeros(N,1);
@@ -40,7 +40,7 @@ paramirf.style='-b';
 paramirf.width=2;
 
 %Compute and Plot IRF
-%RES_imperfect=irf_risky_ss(exo, paramirf, grid, rule, model);
+RES_imperfect=irf_risky_ss(exo, paramirf, grid, rule, model);
 
 
 %% Linear Decision Rule

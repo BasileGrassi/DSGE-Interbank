@@ -12,11 +12,11 @@ declarations:
 
     controls: [R, PI, RL, nu_def, d]
 
-    auxiliary: [Phi, mu, w, y, pro,rk, x, Enu_def,d_per, d_imp, m, c, uc, I,lamb, lhat, nu_rat, nu_strat, nu_star, pro_B,pro_def]
+    auxiliary: [Phi, mu, w, y, pro,rk, x, Enu_def,d_per, d_imp, m, c, uc, I,lamb, lhat, nu_rat, nu_strat, nu_star, pro_B,pro_def,perfect,rat]
 
     shocks: [e_z,e_u]
 
-    parameters: [beta, alpha, delta, x_ss, theta, gamma, varphi, rho, sigma_z, sigma_u, spreadq, me, xi, sigma, vartheta]
+    parameters: [beta, alpha, delta, x_ss, theta, gamma, varphi, rho, sigma_z, sigma_u, spreadq, me, xi, sigma, vartheta,big]
 
 equations:
 
@@ -53,16 +53,18 @@ equations:
         - nu_rat=(d+x+lhat)/(w/exp(z))
         - nu_strat=(pro+(RL-R)*d+RL*x-vartheta*lhat)/(RL*(w/exp(z)))
         - nu_star = (pro-RL*k)/(RL*(w/exp(z)))
-        - pro_B = (RL-R)*d*RL*x+RL*k
+        - pro_B = (RL-R)*d+RL*x+RL*k
         - pro_def = vartheta*lhat
+        - perfect = 0.5*( (exp(2*big*(pro_B-pro_def))-1)/(exp(2*big*(pro_B-pro_def))+1)  +1)
+        - rat = 0.5*( (exp(2*big*(nu_strat-nu_rat))-1)/(exp(2*big*(nu_strat-nu_rat))+1)  +1)
 
 
     arbitrage:
-        - lamb = beta*(1+rk(1)-delta)*Phi(1)*lamb(1)                         | -inf <= R <= inf
-        - lamb = beta*uc(1)/(1+PI(1))                                        | -inf <= PI <= inf
-        - (RL-R) = (1-Phi)/Phi*vartheta*(R-1)/RL                             | -inf <= RL <= inf
-        - nu_def=nu_star                                                     | -inf <= nu_def <= inf
-        - d=(Enu_def*w/exp(z)*Phi-(1-Phi)*(k+x)/RL-Phi*x)/(Phi-(1-Phi)*(R-1)/RL)        | -inf <= d <= inf
+        - lamb = beta*(1+rk(1)-delta)*Phi(1)*lamb(1)                    | -inf <= R <= inf
+        - lamb = beta*uc(1)/(1+PI(1))                                   | -inf <= PI <= inf
+        - (RL-R) = (1-perfect)*(1-Phi)/Phi*vartheta*(R-1)/RL                        | -inf <= RL <= inf
+        - nu_def = (1-perfect)*(nu_star*(1-rat)+nu_rat*rat) + perfect*nu_star                          | -inf <= nu_def <= inf
+        - d= d_per*perfect+ d_imp*(1-perfect)                           | -inf <= d <= inf
 
 calibration:
 
@@ -82,6 +84,7 @@ calibration:
         xi: 0.9
         sigma: 0.2187
         vartheta: 0.5
+        big: 5
 
     steady_state:
         z: 0
@@ -112,10 +115,12 @@ calibration:
         uc: 1/c
         lamb: uc/R
         nu_star: (pro-RL*k)/(RL*(w/exp(z)))
-        pro_B : (RL-R)*d*RL*x+RL*k
+        pro_B : (RL-R)*d+RL*x+RL*k
         pro_def : vartheta*lhat
         d_per : Enu_def*w/exp(z)*Phi - (1-Phi)*k-x
         d_imp : (Enu_def*w/exp(z)*Phi-(1-Phi)*(k+x)/RL-Phi*x)/(Phi-(1-Phi)*(R-1)/RL)
+        perfect : 0.5*( (exp(2*big*(pro_B-pro_def))-1)/(exp(2*big*(pro_B-pro_def))+1)  +1)
+        rat : 0.5*( (exp(2*big*(nu_strat-nu_rat))-1)/(exp(2*big*(nu_strat-nu_rat))+1)  +1)
 
 
 

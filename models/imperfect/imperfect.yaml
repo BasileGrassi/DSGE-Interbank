@@ -10,9 +10,9 @@ declarations:
 
     states: [k, mm, mL, z, u]
 
-    controls: [R, PI, RL, nu_def]
+    controls: [R, PI, RL, nu_def, d]
 
-    auxiliary: [Phi, mu, w, y, pro,rk, x, Enu_def, d, m, c, uc, I,lamb, lhat, nu_rat, nu_strat, nu_star]
+    auxiliary: [Phi, mu, w, y, pro,rk, x, Enu_def,d_per, d_imp, m, c, uc, I,lamb, lhat, nu_rat, nu_strat, nu_star, pro_B,pro_def]
 
     shocks: [e_z,e_u]
 
@@ -39,7 +39,9 @@ equations:
 #second part
         - x = u+x_ss
         - Enu_def = sigma+nu_def*(1+xi*(nu_def-me)/sigma)^(-1/xi)/Phi
-        - d=(Enu_def*w/exp(z)*Phi-(1-Phi)*(k+x)/RL-Phi*x)/(Phi-(1-Phi)*(R-1)/RL)
+        - d_per = Enu_def*w/exp(z)*Phi - (1-Phi)*k-x
+        - d_imp = (Enu_def*w/exp(z)*Phi-(1-Phi)*(k+x)/RL-Phi*x)/(Phi-(1-Phi)*(R-1)/RL)
+
 #third part
         - m = mm/(1+PI)
         - c = mL/(1+PI)-d
@@ -51,6 +53,8 @@ equations:
         - nu_rat=(d+x+lhat)/(w/exp(z))
         - nu_strat=(pro+(RL-R)*d+RL*x-vartheta*lhat)/(RL*(w/exp(z)))
         - nu_star = (pro-RL*k)/(RL*(w/exp(z)))
+        - pro_B = (RL-R)*d+RL*x+RL*k
+        - pro_def = vartheta*lhat
 
 
     arbitrage:
@@ -58,6 +62,7 @@ equations:
         - lamb = beta*uc(1)/(1+PI(1))                                        | -inf <= PI <= inf
         - (RL-R) = (1-Phi)/Phi*vartheta*(R-1)/RL                             | -inf <= RL <= inf
         - nu_def=nu_star                                                     | -inf <= nu_def <= inf
+        - d=(Enu_def*w/exp(z)*Phi-(1-Phi)*(k+x)/RL-Phi*x)/(Phi-(1-Phi)*(R-1)/RL)        | -inf <= d <= inf
 
 calibration:
 
@@ -107,6 +112,10 @@ calibration:
         uc: 1/c
         lamb: uc/R
         nu_star: (pro-RL*k)/(RL*(w/exp(z)))
+        pro_B : (RL-R)*d+RL*x+RL*k
+        pro_def : vartheta*lhat
+        d_per : Enu_def*w/exp(z)*Phi - (1-Phi)*k-x
+        d_imp : (Enu_def*w/exp(z)*Phi-(1-Phi)*(k+x)/RL-Phi*x)/(Phi-(1-Phi)*(R-1)/RL)
 
 
 

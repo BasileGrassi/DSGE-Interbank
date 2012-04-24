@@ -39,7 +39,7 @@ equations:
 #second part
         - x = u+x_ss
         - Enu_def = sigma+nu_def*(1+xi*(nu_def-me)/sigma)^(-1/xi)/Phi
-        - d=Enu_def*w/exp(z)*Phi+ (1-Phi)*k-x
+        - d=Enu_def*w/exp(z)*Phi - (1-Phi)*k-x
 #third part
         - m = mm/(1+PI)
         - c = mL/(1+PI)-d
@@ -93,7 +93,7 @@ calibration:
         I: k*(1-(1-delta)*Phi)
         c: y-I
         Enu_def: sigma+nu_def*(1+xi*(nu_def-me)/sigma)^(-1/xi)/Phi
-        d: Enu_def*w/exp(z)*Phi+ (1-Phi)*k - x
+        d: Enu_def*w/exp(z)*Phi - (1-Phi)*k - x
         mL: (1+PI)*(c+d)
         m: mL
         mm: (1+PI)*m
