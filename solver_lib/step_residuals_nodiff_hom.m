@@ -4,6 +4,7 @@ function  F = step_residuals_nodiff( s, x, e0, w, params, model, coeff, cdef, ho
 % e0 : non-discrete shocks except of the crisis
 % w  : weights of non-discrete shocks
     
+    params(16)=0.5; 
 
     f=model.f;
     g=model.g;
@@ -52,10 +53,27 @@ function  F = step_residuals_nodiff( s, x, e0, w, params, model, coeff, cdef, ho
     % future controls
     XX = funeval(coeff, cdef, SS);
     
-    XX(1,:)=XX(1,:)*hom+model.x_ss(1);
+    aa=model.a(ss,xx,params);
+    
+    inu_star=strmatch('nu_star',model.auxiliaries,'exact');
+    id_per=strmatch('d_per',model.auxiliaries,'exact');
+    
+    inu_def=strmatch('nu_def',model.controls,'exact');
+    id=strmatch('d',model.controls,'exact');
+    
+    %XX(:,2)=XX(:,2)*hom + (1-hom)*model.x_ss(2);    FF(:,3)=FF(:,3)*hom+ (1-hom)*(- xx(:,1) + xx(:,3));
+%     FF(:,inu_def)=FF(:,inu_def)*hom+ (1-hom)*(xx(:,inu_def)-aa(:,inu_star));
+%     FF(:,id)=FF(:,id)*hom+ (1-hom)*(xx(:,id)-aa(:,id_per));
+
+%     XX(:,inu_def)=XX(:,inu_def)*hom+ (1-hom)*AA(:,inu_star);
+%     XX(:,id)=XX(:,id)*hom+ (1-hom)*AA(:,id_per);
         
     % residuals of arbitrage conditions (non integrated)
     [FF] = f(ss, xx, SS, XX, params);
+    
+    FF(:,3)=FF(:,3)*hom+ (1-hom)*(- xx(:,1) + xx(:,3));
+    FF(:,inu_def)=FF(:,inu_def)*hom+ (1-hom)*(xx(:,inu_def)-aa(:,inu_star));
+    FF(:,id)=FF(:,id)*hom+ (1-hom)*(xx(:,id)-aa(:,id_per));
 
     FF = reshape(FF, n_e, nobs, n_r);
     FF = permute( FF, [1, 3, 2]);  % order -> ( n_e, n_r, nobs)

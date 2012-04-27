@@ -1,12 +1,14 @@
 
-load imperfect_xp_sol
+load imperfect_sol
+
+dessine='oui'
 
 disp('-----------------Test for a given deviation from s_rss --------------------')
 
-gamma=1
+gamma=0.90
 disp('-------States----------')
 s=rule.s_rss';
-s(1)=s(1)*gamma;
+s(2)=s(2)*gamma;
 disp(model.states);
 disp(s);
 
@@ -58,33 +60,41 @@ ivartheta=strmatch('vartheta',model.parameters,'exact');
 
 
 disp('-----------------Plot the regime-------------------------')
-% 
-% close all
-% k=[5:0.1:25];
-% m=[0.5:0.1:3];
-% 
-% nk=length(k);
-% nm=length(m);
-% 
-% ns=length(model.states);
-% nx=length(model.controls);
-% naux=length(model.auxiliaries);
-% 
-% s=zeros(nm*nk,ns);
-% x=zeros(nx,nm,nk);
-% aux=zeros(naux,nm,nk);
-% for i=1:nk;
-%     for j=1:nm;
-%         x(:,j,i)=funeval(rule.coeff,rule.cdef,[k(i),m(j),(1+model.params(4))*m(j),0,0]);
-%         a=model.a([k(i),m(j),(1+model.params(4))*m(j),0,0], x(:,j,i)',model.params);
-%         aux(:,j,i)=a';
-%     end;
-% end;
-% 
-% z=squeeze(aux(22,:,:));
-% mesh(k,m,z);
-% 
-% 
 
+switch dessine
+    case 'oui'
+
+close all
+k=[1:0.1:40];
+m=[0.5:0.1:3];
+
+nk=length(k);
+nm=length(m);
+
+ns=length(model.states);
+nx=length(model.controls);
+naux=length(model.auxiliaries);
+
+ix_ss=strmatch('x_ss',model.parameters,'exact');
+
+s=zeros(nm*nk,ns);
+x=zeros(nx,nm,nk);
+aux=zeros(naux,nm,nk);
+for i=1:nk;
+    for j=1:nm;
+        x(:,j,i)=funeval(rule.coeff,rule.cdef,[k(i),m(j),(1+model.params(4))*m(j),0,0]);
+        a=model.a([k(i),m(j),(1+model.params(ix_ss))*m(j),0,0], x(:,j,i)',model.params);
+        aux(:,j,i)=a';
+    end;
+end;
+
+z=squeeze(aux(22,:,:));
+mesh(k,m,z);
+xlabel('k');
+ylabel('mm');
+
+
+    case 'non'
+end;
 
 

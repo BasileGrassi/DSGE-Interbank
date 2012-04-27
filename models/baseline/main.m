@@ -14,12 +14,15 @@ clear all
 addpath('../../solver_lib')
 
 %% set model name
-model_name = 'baseline';
+model_name = 'baseline_easy';
 
 none=[];
 
 model = feval( [model_name '_model']);
 
+[s_ss,x_ss]=steady_state(model,model.params);
+model.x_ss=x_ss';
+model.s_ss=s_ss';
 
 
 %% Define shocks
@@ -38,10 +41,10 @@ m = [0 0];
 %% Define the grid
 ss = model.s_ss;
 
-smin = [  17, 2, 2, -0.03, -0.03 ];
-smax = [ 30, 3.6, 3.6, 0.03, 0.03 ];
+smin = [ 25, 2, 2, -0.025, -0.007 ];
+smax = [ 34, 2.6, 2.6, 0.025, 0.007 ];
          
-orders = [5, 4, 4, 3, 3];
+orders = [3, 3, 3, 2, 2];
 
 
 %% Define interpolator
@@ -63,7 +66,7 @@ s_ss = model.s_ss;
 % X_s = model.X{2}
 % xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
 % x=xinit';
-X_s=initial_guess(model, model.s_ss, model.x_ss);
+X_s=initial_guess(model, model.s_ss, model.x_ss,model.params);
 X_s=real(X_s);
 xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
 x=xinit';

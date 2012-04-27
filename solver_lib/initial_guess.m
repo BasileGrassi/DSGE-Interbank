@@ -1,10 +1,10 @@
-function [C] = initial_guess(model, s_ss, x_ss)
+function [C] = initial_guess(model, s_ss, x_ss,params)
     % initial_guess: computes first order controls
     %
     % given a model structure, computes a first order approximation
     % of the controls 
 
-    params = model.params;
+    %params = model.params;
     
     n_shocks = 3; % this should be recovered from the model !
 

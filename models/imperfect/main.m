@@ -8,7 +8,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-clear all
+%clear all
 
 %% Addpath libraries
 
@@ -24,9 +24,9 @@ none=[];
 model = feval( [model_name '_model']);
 
 
-%[x_ss,s_ss]=steady_state(model);
-%model.x_ss=x_ss';
-%model.s_ss=s_ss';
+[s_ss,x_ss]=steady_state(model,model.params);
+model.x_ss=x_ss';
+model.s_ss=s_ss';
 
 % Define shocks
 N_shocks = [5 5];
@@ -44,8 +44,16 @@ m = [0 0];
 %% Define the grid
 ss = model.s_ss;
 
-smin = [  17, 1.8, 1.8, -0.025, -0.03 ];
-smax = [ 24, 2.6, 2.6, 0.025, 0.03 ];
+
+
+% smin = [ 25, 1, 1, -0.025, -0.007 ];
+% smax = [ 34, 2.6, 2.6, 0.025, 0.007 ];
+% 
+% smin = [ 26.5, 2.23, 2, -0.025, -0.007 ];
+% smax = [ 32.5, 2.55, 2.35, 0.025, 0.007 ];
+
+smin = [ 26.5, 2.23, 2, -0.025, -0.007 ];
+smax = [ 32.5, 2.55, 2.35, 0.025, 0.007 ];
          
 orders = [4, 4, 4, 3, 3];
 
@@ -66,19 +74,19 @@ maxiteration=5000;
 %% Initialization using first order d.r.
 x_ss = model.x_ss;
 s_ss = model.s_ss;
-X_s = model.X{2};
-xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
-x=xinit';
-% X_s=initial_guess(model, model.s_ss, model.x_ss);
-% X_s=real(X_s);
+% X_s = model.X{2};
 % xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
 % x=xinit';
+X_s=initial_guess(model, model.s_ss, model.x_ss,model.params);
+X_s=real(X_s);
+xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
+x=xinit';
 
 %% Iterate
 iteration=1;
 converge=0;
 
-hom_n = 4;
+hom_n = 50;
 homvec = linspace(0,1,hom_n);
 hom_i = 1;
 hom = 0;

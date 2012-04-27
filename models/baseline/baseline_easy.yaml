@@ -10,7 +10,7 @@ declarations:
 
     states: [k, mm, mL, z, u]
 
-    controls: [R, PI, RL, nu_def, d]
+    controls: [R, PI, RL, nu_def,d]
 
     auxiliary: [Phi, mu, w, y, pro,rk, x, Enu_def,d_per, d_imp, m, c, uc, I,lamb, lhat, nu_rat, nu_strat, nu_star, pro_B,pro_def,perfect,rat]
 
@@ -55,7 +55,7 @@ equations:
         - nu_star = (pro-RL*k)/(RL*(w/exp(z)))
         - pro_B = (RL-R)*d+RL*x+RL*k
         - pro_def = vartheta*lhat
-        - perfect = 0.5*(tanh(big*(pro_B-pro_def))  +1)
+        - perfect = 0 #0.5*(tanh(big*(pro_B-pro_def))  +1)2.45
         - rat = 0 #0.5*(tanh(big*(nu_strat-nu_rat))  +1)
 #        - perfect = 0.5*( (exp(2*big*(pro_B-pro_def))-1)/(exp(2*big*(pro_B-pro_def))+1)  +1)
 #        - rat = 0.5*( (exp(2*big*(nu_strat-nu_rat))-1)/(exp(2*big*(nu_strat-nu_rat))+1)  +1)
@@ -64,9 +64,10 @@ equations:
     arbitrage:
         - lamb = beta*(1+rk(1)-delta)*Phi(1)*lamb(1)                    | -inf <= R <= inf
         - lamb = beta*uc(1)/(1+PI(1))                                   | -inf <= PI <= inf
-        - (RL-R) = (1-perfect)*(1-Phi)/Phi*vartheta*(R-1)/RL                        | -inf <= RL <= inf
-        - nu_def = (1-perfect)*(nu_strat*(1-rat)+nu_rat*rat) + perfect*nu_star                          | -inf <= nu_def <= inf
-        - d= d_per*perfect+ d_imp*(1-perfect)                           | -inf <= d <= inf
+        - (RL-R) = (1-perfect)*(1-Phi)/Phi*vartheta*(R-1)/RL            | -inf <= RL <= inf
+        - nu_def = nu_star                                              | -inf <= nu_def <= inf
+        - d =d_per                                                      | -inf <= d <= inf
+
 
 calibration:
 
@@ -83,7 +84,7 @@ calibration:
         sigma_u: 0.0036 #0.0089
         spreadq: 0.0095
         me: -30
-        xi: 1.5
+        xi: 0.9
         sigma: 0.2
         vartheta: 0.9
         big: 5
@@ -95,9 +96,9 @@ calibration:
         x: x_ss
         R: (1+PI)/beta
         RL: 1.0101
-        nu_def:  -9.1088
-        k: 12.3319
-        d:  -0.5831
+        nu_def:  -16.1622
+        k: 29.7378
+        d:  -0.2349
 #Solvable for a given nu_def and a given k, d and RL
         lhat: (k+x-(R-1)*d)/RL
         Phi: 1-(1+xi*(nu_def-me)/sigma)^(-1/xi)
