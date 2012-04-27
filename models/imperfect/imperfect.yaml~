@@ -53,7 +53,7 @@ equations:
         - nu_rat=(d+x+lhat)/(w/exp(z))
         - nu_strat=(pro+(RL-R)*d+RL*x-vartheta*lhat)/(RL*(w/exp(z)))
         - nu_star = (pro-RL*k)/(RL*(w/exp(z)))
-        - pro_B = (RL-R)*d*RL*x+RL*k
+        - pro_B = (RL-R)*d+RL*x+RL*k
         - pro_def = vartheta*lhat
 
 
@@ -112,7 +112,7 @@ calibration:
         uc: 1/c
         lamb: uc/R
         nu_star: (pro-RL*k)/(RL*(w/exp(z)))
-        pro_B : (RL-R)*d*RL*x+RL*k
+        pro_B : (RL-R)*d+RL*x+RL*k
         pro_def : vartheta*lhat
         d_per : Enu_def*w/exp(z)*Phi - (1-Phi)*k-x
         d_imp : (Enu_def*w/exp(z)*Phi-(1-Phi)*(k+x)/RL-Phi*x)/(Phi-(1-Phi)*(R-1)/RL)

@@ -15,7 +15,7 @@ clear all
 addpath('../../solver_lib')
 
 %% set model name
-model_name = 'imperfect_xp';
+model_name = 'imperfect';
 
 %% Parameters
 none=[];
