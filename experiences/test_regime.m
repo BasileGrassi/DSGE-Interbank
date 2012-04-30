@@ -5,7 +5,7 @@ dessine='oui'
 
 disp('-----------------Test for a given deviation from s_rss --------------------')
 
-gamma=0.90
+gamma=0.50
 disp('-------States----------')
 s=rule.s_rss';
 s(2)=s(2)*gamma;
@@ -25,12 +25,14 @@ irat=strmatch('rat',model.auxiliaries,'exact');
 iperfect=strmatch('perfect',model.auxiliaries,'exact');
 ipro_B=strmatch('pro_B',model.auxiliaries,'exact');
 ipro_def=strmatch('pro_def',model.auxiliaries,'exact');
+inu_def=strmatch('nu_def',model.controls,'exact');
 %disp(model.auxiliaries);
 aux=model.a(s,x,model.params);
 %disp(aux)
 aux(:,inu_rat)
 aux(:,inu_strat)
 aux(:,inu_star)
+x(:,inu_def)
 aux(:,irat)
 aux(:,iperfect)
 aux(:,ipro_B)-aux(:,ipro_def)
@@ -66,7 +68,7 @@ switch dessine
 
 close all
 k=[1:0.1:40];
-m=[0.5:0.1:3];
+m=[0.5:0.1:4];
 
 nk=length(k);
 nm=length(m);
@@ -88,7 +90,8 @@ for i=1:nk;
     end;
 end;
 
-z=squeeze(aux(22,:,:));
+z=squeeze(aux(iperfect,:,:));
+%z=squeeze(aux(ipro_B,:,:)-aux(ipro_def,:,:));
 mesh(k,m,z);
 xlabel('k');
 ylabel('mm');
