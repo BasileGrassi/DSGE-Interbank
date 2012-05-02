@@ -1,11 +1,11 @@
 
 load imperfect_sol
 
-dessine='oui'
+dessine='oui';
 
 disp('-----------------Test for a given deviation from s_rss --------------------')
 
-gamma=0.50
+gamma=0.8
 disp('-------States----------')
 s=rule.s_rss';
 s(2)=s(2)*gamma;
@@ -29,13 +29,13 @@ inu_def=strmatch('nu_def',model.controls,'exact');
 %disp(model.auxiliaries);
 aux=model.a(s,x,model.params);
 %disp(aux)
-aux(:,inu_rat)
-aux(:,inu_strat)
-aux(:,inu_star)
-x(:,inu_def)
-aux(:,irat)
-aux(:,iperfect)
-aux(:,ipro_B)-aux(:,ipro_def)
+nu_rat=aux(:,inu_rat)
+nu_strat=aux(:,inu_strat)
+nu_star=aux(:,inu_star)
+nu_def=x(:,inu_def)
+rat=aux(:,irat)
+perfect=aux(:,iperfect)
+diffpro=aux(:,ipro_B)-aux(:,ipro_def)
 
 
 
@@ -55,8 +55,8 @@ ipro_def=strmatch('pro_def',model.auxiliaries,'exact');
 
 aux=model.a(grid.grid,rule.x,model.params);
 
-mean(aux(:,iperfect))
-mean(aux(:,irat))
+meanperfect=mean(aux(:,iperfect))
+meanrat=mean(aux(:,irat))
 
 ivartheta=strmatch('vartheta',model.parameters,'exact');
 
@@ -67,7 +67,7 @@ switch dessine
     case 'oui'
 
 close all
-k=[1:0.1:40];
+k=[1:0.1:47];
 m=[0.5:0.1:4];
 
 nk=length(k);

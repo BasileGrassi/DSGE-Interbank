@@ -1,3 +1,4 @@
+clear all
 model=imperfect_model;
 
 isigma=strmatch('sigma',model.parameters,'exact');
@@ -15,8 +16,8 @@ params(isigma)=0.2;
 params(ixi)=0.9;
 params(ime)=-30;
 
-params(ibeta)=0.995; %0.99
-params(ixss)=0.005; %0.005
+params(ibeta)=0.9925; %0.99
+params(ixss)=0.025; %0.005
 
 params(ivartheta)=0.9;
 
@@ -33,6 +34,10 @@ k=model.s_ss(1)
 ratio=diffpro/k
 nu_def=model.x_ss(4)
 d=model.x_ss(5)
+mm=model.s_ss(2)
+k/mm
 
 
 X_s=initial_guess(model, model.s_ss, model.x_ss,params)
+
+

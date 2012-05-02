@@ -47,6 +47,8 @@ close all;
 %% Generalized Pareto with 3 params
 dist=dist_genpareto3p;
 
+nu_def=-11.0923;
+
 figure(1);
 xa=dist.support(1);
 xb=dist.support(2);
@@ -57,20 +59,20 @@ plot(x,y,'k');
 hold on;
 xlim(dist.support);
 title('cdf of the distribution')
-line([-16.1622 , -16.1622],[0 , 1],'Color','r')
-dist.cdf(-16.1622,dist.params)
-
-%Plot pdf
-figure(2);
-xa=dist.support(1);
-xb=dist.support(2);
-pas=0.1;
-x=[xa:pas:xb];
-y=dist.pdf(x,dist.params);
-plot(x,y,'k');
-hold on;
-xlim(dist.support);
-title('pdf of the distribution')
+line([nu_def , nu_def],[0 , 1],'Color','r')
+dist.cdf(nu_def,dist.params)
+% 
+% %Plot pdf
+% figure(2);
+% xa=dist.support(1);
+% xb=dist.support(2);
+% pas=0.1;
+% x=[xa:pas:xb];
+% y=dist.pdf(x,dist.params);
+% plot(x,y,'k');
+% hold on;
+% xlim(dist.support);
+% title('pdf of the distribution')
 
 %Plot Etr
 % figure(3);

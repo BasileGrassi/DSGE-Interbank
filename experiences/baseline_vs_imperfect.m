@@ -14,7 +14,7 @@ addpath('../solver_lib')
 model_name = 'baseline';
 addpath(['../models/', model_name])
 
-load baseline_sol;
+load baseline_easy_sol;
 
 %% Configure the exogenous fundalmentals
 exo.n=2;
@@ -25,7 +25,7 @@ paramirf.namepercent={'R','RL', 'PI', 'x','u','z','rk'}; %give the name of varia
 %% Baseline
 %Define exogeneous path
 e_z=zeros(N,1);
-e_u=[0.0089; zeros(N-1,1)];
+e_u=[-0.8; zeros(N-1,1)];
 %e_u=zeros(N,1);
 
 exo.e=[e_z,e_u];
@@ -57,18 +57,18 @@ RES_imperfect=irf_risky_ss(exo, paramirf, grid, rule, model);
 
 
 %% Rationing ?
-inu_rat=strmatch('nu_rat',model.auxiliaries,'exact');
-inu_strat=strmatch('nu_strat',model.auxiliaries,'exact');
-
-aux=model.a(grid.grid,rule.x,model.params);
-regime=aux(:,inu_rat)<aux(:,inu_strat);
-mean(regime)
-sum(regime)
-
-diff=aux(:,inu_rat)-aux(:,inu_strat);
-[m, i]=min(diff);
-m
-i
+% inu_rat=strmatch('nu_rat',model.auxiliaries,'exact');
+% inu_strat=strmatch('nu_strat',model.auxiliaries,'exact');
+% 
+% aux=model.a(grid.grid,rule.x,model.params);
+% regime=aux(:,inu_rat)<aux(:,inu_strat);
+% mean(regime)
+% sum(regime)
+% 
+% diff=aux(:,inu_rat)-aux(:,inu_strat);
+% [m, i]=min(diff);
+% m
+% i
 
 %% Inputs 'struture description of irf
 

@@ -26,7 +26,7 @@ paramirf.namepercent={'R','RL', 'PI', 'x','u','z','rk'}; %give the name of varia
 %% Imperfect
 %Define exogeneous path
 e_z=zeros(N,1);
-e_u=[0.0089; zeros(N-1,1)];
+e_u=[-0.2; zeros(N-1,1)];
 
 % e_z=[100*0.007; zeros(N-1,1)];
 %e_u=zeros(N,1);

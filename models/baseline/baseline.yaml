@@ -59,10 +59,10 @@ equations:
 calibration:
 
     parameters:
-        beta: 0.989
+        beta: 0.9925
         alpha: 0.36
         delta: 0.019
-        x_ss: 0.0125
+        x_ss: 0.005
         theta: 6
         gamma: 0.5
         varphi: 0
@@ -72,7 +72,7 @@ calibration:
         spreadq: 0.0095
         me: -30
         xi: 0.9
-        sigma: xi*(nu_def-me)/((1-Phi)^(-xi)-1)
+        sigma: 0.2
 
     steady_state:
         z: 0
@@ -81,14 +81,14 @@ calibration:
         x: x_ss
         R: (1+PI)/beta
         RL: R
-        Phi: 1/(beta*spreadq+1)
+        Phi: 1-(1+xi*(nu_def-me)/sigma)^(-1/xi)
         rk: 1/(beta*Phi)-1+delta
         mu: Phi^(1/(theta-1))*(theta-1)/theta
         k: (rk/(mu*alpha))^(1/(alpha-1))
         y: Phi^(theta/(theta-1)+alpha-1)*k^alpha
         w: mu*(1-alpha)*exp(z)*k^alpha
         pro: 1/(theta-1)*(theta/(theta-1))^(-theta)*(mu)^(1-theta)*y
-        nu_def: exp(z)*(pro-RL*k)/(w*RL)
+        nu_def: -15.2955
 #        nu_def: exp(z)*(pro)/(w*RL)
         I: k*(1-(1-delta)*Phi)
         c: y-I

@@ -49,11 +49,13 @@ ss = model.s_ss;
 % smin = [ 25, 1, 1, -0.025, -0.007 ];
 % smax = [ 34, 2.6, 2.6, 0.025, 0.007 ];
 % 
-smin = [ 26.5, 2.30, 2.3, -0.025, -0.007 ];
-smax = [ 32.5, 2.55, 2.35, 0.025, 0.007 ];
+smin = [ 26.3, 2.33, 2.33, -0.025, -0.007 ];
+smax = [ 28.3, 2.40, 2.40, 0.025, 0.007 ];
 
+% smin = [ 8.6, 1.32, 1.3, -0.025, -0.007 ];
+% smax = [ 10.6, 1.38, 1.38, 0.025, 0.007 ];
          
-orders = [4, 4, 4, 3, 3];
+orders = [3, 3, 3, 2, 2];
 
 
 %% Define interpolator
@@ -90,63 +92,88 @@ hom_i = 1;
 hom = 0;
 err0 = 1e6;
 
-disp('Starting policy rule iteration.');
-disp('_________________________________________________________');
-disp('iter       error        gain    hom   inner    elap.(s)  ');
-disp('_________________________________________________________');
+faktor=[1:0.01:2];
+nfaktor=length(faktor)
 
-tic;
-t0 = tic;
-[coeff,B]=funfitxy(cdef, grid, x);
-while converge==0 && iteration < maxiteration
+for k=1:nfaktor;
     
-    [coeff,B]=funfitxy(cdef, grid, x);
     
-    fobj = @(xt) step_residuals_nodiff(grid, xt, e, w, model.params, model, coeff, cdef, hom);
-    [x_up, nit] = newton_solver_diff(fobj, x, 50);
     
-    err=sum(sum(abs(x-x_up)));
-    if (err < tol);
-        converge=1;
+    if k>1;
+    smin = [(2-faktor(k))*smin(1:3), smin(4:5)]
+    smax = [faktor(k)*smax(1:3), smax(4:5)]
+    cdef2=fundefn('lin', orders, smin, smax);
+    nodes = funnode(cdef2);
+    grid = gridmake(nodes);
+    x=funeval(coeff,cdef,grid);
+    
+    cdef=cdef2;
+    disp('Faktor')
+    disp(faktor(k))
+    
     end;
     
-    t1 = tic;
-    elapsed = double(t1 - t0)/1e6;
-    t0 = t1;
-     
-%     irat=strmatch('rat',model.auxiliaries,'exact');
-%     iperfect=strmatch('perfect',model.auxiliaries,'exact');
-%     aux=model.a(grid,x,model.params);
-%     disp(mean(aux(:,irat)));
-%     disp(mean(aux(:,iperfect)));
+    converge=0;
+    iteration=1;
     
-    gain=err/err0;
-    fprintf('%d\t%e\t%.2f\t%.2f\t%d\t%.2f\n', iteration, err, gain, hom, nit, elapsed)
-    %disp(sum(abs(x-x_up)));
-    
+    disp('Starting policy rule iteration.');
+    disp('_________________________________________________________');
+    disp('iter       error        gain    hom   inner    elap.(s)  ');
+    disp('_________________________________________________________');
 
-    %sum(regime)
+    tic;
+    t0 = tic;
+    %[coeff,B]=funfitxy(cdef, grid, x);
+    while converge==0 && iteration < maxiteration
 
-    
-    if (err < 1) && (hom_i < hom_n);
-        hom_i = hom_i + 1;
-        hom = homvec(hom_i);
+        [coeff,B]=funfitxy(cdef, grid, x);
+
+        fobj = @(xt) step_residuals_nodiff(grid, xt, e, w, model.params, model, coeff, cdef, hom);
+        [x_up, nit] = newton_solver_diff(fobj, x, 50);
+
+        err=sum(sum(abs(x-x_up)));
+        if (err < tol);
+            converge=1;
+        end;
+
+        t1 = tic;
+        elapsed = double(t1 - t0)/1e6;
+        t0 = t1;
+
+    %     irat=strmatch('rat',model.auxiliaries,'exact');
+    %     iperfect=strmatch('perfect',model.auxiliaries,'exact');
+    %     aux=model.a(grid,x,model.params);
+    %     disp(mean(aux(:,irat)));
+    %     disp(mean(aux(:,iperfect)));
+
+        gain=err/err0;
+        fprintf('%d\t%e\t%.2f\t%.2f\t%d\t%.2f\n', iteration, err, gain, hom, nit, elapsed)
+        %disp(sum(abs(x-x_up)));
+
+
+        %sum(regime)
+
+
+        if (err < 1) && (hom_i < hom_n);
+            hom_i = hom_i + 1;
+            hom = homvec(hom_i);
+        end;
+
+        err0 = err;  
+
+        x=x_up;
+        iteration = iteration+1;
+
+
     end;
-    
-    err0 = err;  
-    
-    x=x_up;
-    iteration = iteration+1;
-    
-    
+    disp('___________ ________________________________');
+    toc;
+
+    if iteration > maxiteration
+        disp('The model could not be solved');
+    end
+
 end;
-disp('___________ ________________________________');
-toc;
-
-if iteration > maxiteration
-    disp('The model could not be solved');
-end
-
 %% Save the grid
 grille.smax= smax;
 grille.smin=smin;

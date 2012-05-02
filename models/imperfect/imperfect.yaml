@@ -71,7 +71,7 @@ equations:
 calibration:
 
     parameters:
-        beta: 0.995
+        beta: 0.9925
         alpha: 0.36
         delta: 0.019
         x_ss: 0.005
@@ -94,10 +94,10 @@ calibration:
         PI: x_ss
         x: x_ss
         R: (1+PI)/beta
-        RL: 1.0101
-        nu_def:  -16.1622
-        k: 29.7378
-        d:  -0.2349
+        RL: R
+        nu_def: -15.2955
+        k: 27.3325
+        d: -0.1628
 #Solvable for a given nu_def and a given k, d and RL
         lhat: (k+x-(R-1)*d)/RL
         Phi: 1-(1+xi*(nu_def-me)/sigma)^(-1/xi)

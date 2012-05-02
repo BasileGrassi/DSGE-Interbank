@@ -7,6 +7,7 @@
 % Do not forget to add the compecon libraries
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 clear all
 
 %% Addpath libraries
@@ -14,18 +15,20 @@ clear all
 addpath('../../solver_lib')
 
 %% set model name
-model_name = 'baseline_easy';
+model_name = 'imperfect_xp';
 
+%% Parameters
 none=[];
 
+
 model = feval( [model_name '_model']);
+
 
 [s_ss,x_ss]=steady_state(model,model.params);
 model.x_ss=x_ss';
 model.s_ss=s_ss';
 
-
-%% Define shocks
+% Define shocks
 N_shocks = [5 5];
 
 isigma_z=strmatch('sigma_z',model.parameters, 'exact');
@@ -41,10 +44,16 @@ m = [0 0];
 %% Define the grid
 ss = model.s_ss;
 
-smin = [ 25, 2, 2, -0.025, -0.007 ];
+
+
+smin = [ 25, 1, 1, -0.025, -0.007 ];
 smax = [ 34, 2.6, 2.6, 0.025, 0.007 ];
+% 
+% smin = [ 26.5, 2.30, 2.3, -0.025, -0.007 ];
+% smax = [ 32.5, 2.55, 2.35, 0.025, 0.007 ];
+
          
-orders = [4, 4, 4, 3, 3];
+orders = [6, 6, 6, 2, 2];
 
 
 %% Define interpolator
@@ -60,10 +69,10 @@ ns = size(grid,1)
 tol=1e-10;
 maxiteration=5000;
 
-% Initialization using first order d.r.
+%% Initialization using first order d.r.
 x_ss = model.x_ss;
 s_ss = model.s_ss;
-% X_s = model.X{2}
+% X_s = model.X{2};
 % xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
 % x=xinit';
 X_s=initial_guess(model, model.s_ss, model.x_ss,model.params);
@@ -71,12 +80,12 @@ X_s=real(X_s);
 xinit=x_ss*ones(1,ns)+X_s*(grid'-s_ss*ones(1,ns));
 x=xinit';
 
-%% Policy Iteration
+%% Iterate
 iteration=1;
 converge=0;
 
-hom_n = 2;
-homvec = linspace(0.,1,hom_n);
+hom_n = 50;
+homvec = linspace(0,1,hom_n);
 hom_i = 1;
 hom = 0;
 err0 = 1e6;
@@ -88,13 +97,12 @@ disp('_________________________________________________________');
 
 tic;
 t0 = tic;
-%[coeff,B]=funfitxy(cdef, grid, x);
+[coeff,B]=funfitxy(cdef, grid, x);
 while converge==0 && iteration < maxiteration
-    
     
     [coeff,B]=funfitxy(cdef, grid, x);
     
-    fobj = @(xt) step_residuals_nodiff(grid, xt, e, w, model.params, model, coeff, cdef, hom);
+    fobj = @(xt) step_residuals_nodiff_hom(grid, xt, e, w, model.params, model, coeff, cdef, hom);
     [x_up, nit] = newton_solver_diff(fobj, x, 50);
     
     err=sum(sum(abs(x-x_up)));
@@ -105,20 +113,28 @@ while converge==0 && iteration < maxiteration
     t1 = tic;
     elapsed = double(t1 - t0)/1e6;
     t0 = t1;
+     
+%     irat=strmatch('rat',model.auxiliaries,'exact');
+%     iperfect=strmatch('perfect',model.auxiliaries,'exact');
+%     aux=model.a(grid,x,model.params);
+%     disp(mean(aux(:,irat)));
+%     disp(mean(aux(:,iperfect)));
     
     gain=err/err0;
-    gain=(gain<1)*(gain>.99)*0.99 + (1-(gain<1)*(gain>.99))*gain;
     fprintf('%d\t%e\t%.2f\t%.2f\t%d\t%.2f\n', iteration, err, gain, hom, nit, elapsed)
-    %disp(sum(abs(x-x_up)))
+    %disp(sum(abs(x-x_up)));
+    
+
+    %sum(regime)
 
     
-    if (err < 10^(-1)) && (hom_i < hom_n);
+    if (err < 0.1) && (hom_i < hom_n);
         hom_i = hom_i + 1;
         hom = homvec(hom_i);
     end;
     
     err0 = err;  
-
+    
     x=x_up;
     iteration = iteration+1;
     
@@ -130,11 +146,6 @@ toc;
 if iteration > maxiteration
     disp('The model could not be solved');
 end
-
-
-%% Solve for the risky steady-state
-
-
 
 %% Save the grid
 grille.smax= smax;
@@ -153,8 +164,10 @@ rule.cdef=cdef;
 rule.coeff=coeff;
 
 %% Solve for the risky steady-state
+disp('Solving for the risky steady state.');
+disp('_________________________________________________________');
 ts_rss=risky_steady_state(model,rule);
 rule.s_rss=ts_rss';
-
+disp('_________________________________________________________');
 %% Save everything
 save([model_name '_sol'],'model','grid','rule');

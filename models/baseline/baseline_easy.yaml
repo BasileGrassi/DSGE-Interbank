@@ -55,7 +55,7 @@ equations:
         - nu_star = (pro-RL*k)/(RL*(w/exp(z)))
         - pro_B = (RL-R)*d+RL*x+RL*k
         - pro_def = vartheta*lhat
-        - perfect = 0 #0.5*(tanh(big*(pro_B-pro_def))  +1)2.45
+        - perfect = 0.5*(tanh(big*(pro_B-pro_def))  +1)
         - rat = 0 #0.5*(tanh(big*(nu_strat-nu_rat))  +1)
 #        - perfect = 0.5*( (exp(2*big*(pro_B-pro_def))-1)/(exp(2*big*(pro_B-pro_def))+1)  +1)
 #        - rat = 0.5*( (exp(2*big*(nu_strat-nu_rat))-1)/(exp(2*big*(nu_strat-nu_rat))+1)  +1)
@@ -72,7 +72,7 @@ equations:
 calibration:
 
     parameters:
-        beta: 0.995
+        beta: 0.9925
         alpha: 0.36
         delta: 0.019
         x_ss: 0.005
@@ -95,7 +95,7 @@ calibration:
         PI: x_ss
         x: x_ss
         R: (1+PI)/beta
-        RL: 1.0101
+        RL: R
         nu_def:  -16.1622
         k: 29.7378
         d:  -0.2349
