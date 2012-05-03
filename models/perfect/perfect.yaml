@@ -1,0 +1,132 @@
+name: DSGE Interbank Grassi 2012 
+#Imperfect case with no rationing
+#with inelastic labor and log utility
+#Warning the definition of mm=M/P(-1) so the real money balance is m = mm/(1+PI)
+
+#k is capital used by an individual firm, capital actually used for production is Phi*k
+#mL is the real money balance disponible at the begining of the period
+
+declarations:
+
+    states: [k, mm, mL, z, u]
+
+    controls: [R, PI, RL, nu_def]
+
+    auxiliary: [Phi, mu, w, y, pro,rk, x, Enu_def,d_per, d_imp,d, m, c, uc, I,lamb, lhat, nu_rat, nu_strat, nu_star, pro_B,pro_def,perfect,rat]
+
+    shocks: [e_z,e_u]
+
+    parameters: [beta, alpha, delta, x_ss, theta, gamma, varphi, rho, sigma_z, sigma_u, spreadq, me, xi, sigma, vartheta,big]
+
+equations:
+
+    transition: 
+        - k = (1-delta)*Phi(-1)*k(-1)+y(-1)-c(-1) 
+        - mm = (1+x_ss+gamma*u(-1)+varphi*z(-1)+e_u)/(1+PI(-1))*mm(-1)
+        - mL = mm(-1)/(1+PI(-1))
+        - z = rho*z(-1)+e_z
+        - u = gamma*u(-1)+varphi*z(-1)+e_u
+
+
+    auxiliary:
+#first part
+        - Phi = 1-(1+xi*(nu_def-me)/sigma)^(-1/xi)
+        - mu = Phi^(1/(theta-1))*(theta-1)/theta
+        - w = mu*(1-alpha)*exp(z)*k^alpha
+        - y = exp(z)*Phi^(theta/(theta-1)+alpha-1)*k^alpha
+        - pro= 1/(theta-1)*(theta/(theta-1))^(-theta)*(mu)^(1-theta)*y
+        - rk=mu*alpha*exp(z)*k^(alpha-1)
+#second part
+        - x = u+x_ss
+        - Enu_def = sigma+nu_def*(1+xi*(nu_def-me)/sigma)^(-1/xi)/Phi
+        - d_per = Enu_def*w/exp(z)*Phi - (1-Phi)*k-x
+        - d_imp = (Enu_def*w/exp(z)*Phi-(1-Phi)*(k+x)/RL-Phi*x)/(Phi-(1-Phi)*(R-1)/RL)
+        - d = d_per
+
+#third part
+        - m = mm/(1+PI)
+        - c = mL/(1+PI)-d
+        - uc = 1/c
+        - I = y - c
+        - lamb = uc/R
+#specific to imperfect case
+        - lhat= (k+x-(R-1)*d)/RL
+        - nu_rat=(d+x+lhat)/(w/exp(z))
+        - nu_strat=(pro+(RL-R)*d+RL*x-vartheta*lhat)/(RL*(w/exp(z)))
+        - nu_star = (pro-RL*k)/(RL*(w/exp(z)))
+        - pro_B = (RL-R)*d+RL*x+RL*k
+        - pro_def = vartheta*lhat
+        - perfect = 0 #0.5*(tanh(big*(pro_B-pro_def))  +1)
+        - rat = 0 #0.5*(tanh(big*(nu_strat-nu_rat))  +1)
+
+
+    arbitrage:
+        - lamb = beta*(1+rk(1)-delta)*Phi(1)*lamb(1)                    | -inf <= R <= inf
+        - lamb = beta*uc(1)/(1+PI(1))                                   | -inf <= PI <= inf
+        - RL=R                        | -inf <= RL <= inf
+        - nu_def = (pro-RL*k)/(RL*(w/exp(z)))    | -inf <= nu_def <= inf
+
+
+calibration:
+
+    parameters:
+        beta: 0.99
+        alpha: 0.36
+        delta: 0.019
+        x_ss: 0.0125
+        theta: 6
+        gamma: 0.5
+        varphi: 0
+        rho: 0.95
+        sigma_z: 0.007
+        sigma_u: 0.007
+        spreadq: 0.0095
+        me: -30
+        xi: 0.9
+        sigma: 0.2
+        vartheta: 0.5
+        big: 5
+
+    steady_state:
+        z: 0
+        u: 0
+        PI: x_ss
+        x: x_ss
+        R: (1+PI)/beta
+        RL: R
+        nu_def: -14.4731
+        k: 25.1114
+        d: -0.1125
+#Solvable for a given nu_def and a given k, d and RL
+        lhat: (k+x-(R-1)*d)/RL
+        Phi: 1-(1+xi*(nu_def-me)/sigma)^(-1/xi)
+        rk: delta+1/(beta*Phi)-1
+        mu: Phi^(1/(theta-1))*(theta-1)/theta
+        y: Phi^(theta/(theta-1)+alpha-1)*k^alpha
+        w: mu*(1-alpha)*exp(z)*k^alpha
+        pro: 1/(theta-1)*(theta/(theta-1))^(-theta)*(mu)^(1-theta)*y
+        nu_rat: (d+x+lhat)/(w/exp(z))
+        nu_strat: (pro+(RL-R)*d+RL*x-vartheta*lhat)/(RL*(w/exp(z)))
+        I: k*(1-(1-delta)*Phi)
+        c: y-I
+        Enu_def: sigma+nu_def*(1+xi*(nu_def-me)/sigma)^(-1/xi)/Phi
+        mL: (1+PI)*(c+d)
+        m: mL
+        mm: (1+PI)*m
+        uc: 1/c
+        lamb: uc/R
+        nu_star: (pro-RL*k)/(RL*(w/exp(z)))
+        pro_B : (RL-R)*d+RL*x+RL*k
+        pro_def : vartheta*lhat
+        d_per : Enu_def*w/exp(z)*Phi - (1-Phi)*k-x
+        d_imp : (Enu_def*w/exp(z)*Phi-(1-Phi)*(k+x)/RL-Phi*x)/(Phi-(1-Phi)*(R-1)/RL)
+        perfect : 0 #0.5*( (exp(2*big*(pro_B-pro_def))-1)/(exp(2*big*(pro_B-pro_def))+1)  +1)
+        rat : 0 #0.5*( (exp(2*big*(nu_strat-nu_rat))-1)/(exp(2*big*(nu_strat-nu_rat))+1)  +1)
+
+
+
+    covariances: |
+        [[ sigma_z**2, 0],
+         [0, sigma_u**2]],
+        
+        
