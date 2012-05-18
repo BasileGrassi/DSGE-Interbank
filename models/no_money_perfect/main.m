@@ -49,11 +49,11 @@ ss = model.s_ss;
 % smin = [ 25, 1, 1, -0.025, -0.007 ];
 % smax = [ 34, 2.6, 2.6, 0.025, 0.007 ];
 % 
-smin = [ 17, -0.025];
-smax = [ 38,  0.025 ];
+smin = [ 25, -2.1];
+smax = [ 29,  2.1 ];
 
          
-orders = [10, 4];
+orders = [10, 10];
 
 
 %% Define interpolator

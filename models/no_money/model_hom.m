@@ -15,7 +15,7 @@ clear all
 addpath('../../solver_lib')
 
 %% set model name
-model_name = 'no_money';
+model_name = 'no_money_hom';
 
 %% Parameters
 none=[];
@@ -49,8 +49,8 @@ ss = model.s_ss;
 % smin = [ 25, 1, 1, -0.025, -0.007 ];
 % smax = [ 34, 2.6, 2.6, 0.025, 0.007 ];
 % 
-smin = [ 24, -1.9];
-smax = [ 30,  1.9 ];
+smin = [ 24, -2];
+smax = [ 30,  2 ];
 
          
 orders = [10, 20];
@@ -84,7 +84,7 @@ x=xinit';
 iteration=1;
 converge=0;
 
-hom_n = 50;
+hom_n = 10;
 homvec = linspace(0,1,hom_n);
 hom_i = 1;
 hom = 0;
@@ -102,7 +102,7 @@ while converge==0 && iteration < maxiteration
     
     [coeff,B]=funfitxy(cdef, grid, x);
     
-    fobj = @(xt) step_residuals_nodiff(grid, xt, e, w, model.params, model, coeff, cdef, hom);
+    fobj = @(xt) step_residuals_nodiff_hom2(grid, xt, e, w, model.params, model, coeff, cdef, hom);
     [x_up, nit] = newton_solver_diff(fobj, x, 50);
     
     err=sum(sum(abs(x-x_up)));

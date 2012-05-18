@@ -1,0 +1,119 @@
+name: DSGE Interbank Grassi 2012 
+#Imperfect case with no rationing
+#with inelastic labor and log utility
+#Warning the definition of mm=M/P(-1) so the real money balance is m = mm/(1+PI)
+
+#k is capital used by an individual firm, capital actually used for production is Phi*k
+#mL is the real money balance disponible at the begining of the period
+
+declarations:
+
+    states: [k, z]
+
+    controls: [R, c, RL, nu_def, d]
+
+    auxiliary: [Phi, mu, w, y, pro,rk, Enu_def,d_per, d_imp, uc, I,lamb, lhat, nu_rat, nu_strat, nu_star, pro_B,pro_def,perfect,rat]
+
+    shocks: [e_z]
+
+    parameters: [beta, alpha, delta, theta, gamma, varphi, rho, sigma_z, sigma_u, spreadq, me, xi, sigma, vartheta,big,hom]
+
+equations:
+
+    transition: 
+        - k = (1-delta)*Phi(-1)*k(-1)+y(-1)-c(-1)-d(-1)
+        - z = rho*z(-1)+e_z
+
+
+    auxiliary:
+#first part
+        - Phi = 1-(1+xi*(nu_def-me)/sigma)^(-1/xi)
+        - mu = Phi^(1/(theta-1))*(theta-1)/theta
+        - w = mu*(1-alpha)*exp(z)*k^alpha
+        - y = exp(z)*Phi^(theta/(theta-1)+alpha-1)*k^alpha
+        - pro= 1/(theta-1)*(theta/(theta-1))^(-theta)*(mu)^(1-theta)*y
+        - rk=mu*alpha*exp(z)*k^(alpha-1)
+#second part
+        - Enu_def = sigma+nu_def*(1+xi*(nu_def-me)/sigma)^(-1/xi)/Phi
+        - d_per = Enu_def*w/exp(z)*Phi - (1-Phi)*k
+        - d_imp = (Enu_def*w/exp(z)*Phi-(1-Phi)*(k)/RL)/(Phi-(1-Phi)*(R-1)/RL)
+
+#third part
+        - uc = 1/c
+        - I = y - c -d
+        - lamb = uc
+#specific to imperfect case
+        - lhat= (k-(R-1)*d)/RL
+        - nu_rat=(d+lhat)/(w/exp(z))
+        - nu_strat=(pro+(RL-R)*d-vartheta*lhat)/(RL*(w/exp(z)))
+        - nu_star = (pro-RL*k)/(RL*(w/exp(z)))
+        - pro_B = (RL-R)*d+RL*k
+        - pro_def = vartheta*lhat
+        - perfect = hom*0.5*(tanh(big*(pro_B-pro_def))  +1)
+        - rat = 0 #0.5*(tanh(big*(nu_strat-nu_rat))  +1)
+
+
+
+    arbitrage:
+        - lamb = beta*(1+rk(1)-delta)*Phi(1)*lamb(1)                    | -inf <= R <= inf
+        - lamb = beta*R*lamb(1)                                         | -inf <= c <= inf
+        - (RL-R) = (1-perfect)*(1-Phi)/Phi*vartheta*(R-1)/RL            | -inf <= RL <= inf
+        - nu_def = (1-perfect)*(nu_strat*(1-rat)+nu_rat*rat) + perfect*nu_star                          | -inf <= nu_def <= inf
+        - d= d_per*perfect+ d_imp*(1-perfect)                           | -inf <= d <= inf
+
+calibration:
+
+    parameters:
+        beta: 0.9925
+        alpha: 0.36
+        delta: 0.019
+        theta: 6
+        gamma: 0.5
+        varphi: 0
+        rho: 0.95
+        sigma_z: 0.007
+        sigma_u: 0.0036 #0.0089
+        spreadq: 0.0095
+        me: -30
+        xi: 0.9
+        sigma: 0.2
+        vartheta: 0.9
+        big: 5
+        hom: 1
+
+    steady_state:
+        z: 0
+        R: 1/beta
+        RL: R
+        nu_def: -15.2955
+        k: 27.3325
+        d: -0.1628
+#Solvable for a given nu_def and a given k, d and RL
+        lhat: (k-(R-1)*d)/RL
+        Phi: 1-(1+xi*(nu_def-me)/sigma)^(-1/xi)
+        rk: delta+1/(beta*Phi)-1
+        mu: Phi^(1/(theta-1))*(theta-1)/theta
+        y: Phi^(theta/(theta-1)+alpha-1)*k^alpha
+        w: mu*(1-alpha)*exp(z)*k^alpha
+        pro: 1/(theta-1)*(theta/(theta-1))^(-theta)*(mu)^(1-theta)*y
+        nu_rat: (d+lhat)/(w/exp(z))
+        nu_strat: (pro+(RL-R)*d-vartheta*lhat)/(RL*(w/exp(z)))
+        I: k*(1-(1-delta)*Phi)
+        c: y-I-d
+        Enu_def: sigma+nu_def*(1+xi*(nu_def-me)/sigma)^(-1/xi)/Phi
+        uc: 1/c
+        lamb: uc/R
+        nu_star: (pro-RL*k)/(RL*(w/exp(z)))
+        pro_B : (RL-R)*d+RL*k
+        pro_def : vartheta*lhat
+        d_per : Enu_def*w/exp(z)*Phi - (1-Phi)*k
+        d_imp : (Enu_def*w/exp(z)*Phi-(1-Phi)*(k)/RL)/(Phi-(1-Phi)*(R-1)/RL)
+        perfect : 0.5*( (exp(2*big*(pro_B-pro_def))-1)/(exp(2*big*(pro_B-pro_def))+1)  +1)
+        rat : 0.5*( (exp(2*big*(nu_strat-nu_rat))-1)/(exp(2*big*(nu_strat-nu_rat))+1)  +1)
+
+
+
+    covariances: |
+        [[ sigma_z**2]],
+        
+        

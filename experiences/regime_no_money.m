@@ -1,4 +1,7 @@
 
+addpath('../models/no_money')
+
+load no_money_sol
 
 disp('-----------------Plot the regime-------------------------')
 
@@ -37,6 +40,7 @@ end;
 
 z=squeeze(aux(iperfect,:));
 
+figure(1);
 plot(k,aux(iperfect,:));
 
 
@@ -72,6 +76,7 @@ end;
 
 pl=squeeze(aux(iperfect,:,:));
 %z=squeeze(aux(ipro_B,:,:)-aux(ipro_def,:,:));
+figure(2);
 mesh(k,z,pl);
 xlabel('k');
 ylabel('z');
